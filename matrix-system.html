@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Matrix System Solver</title>
+<style>
+    body { font-family: sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 20px auto; padding: 20px; }
+    h2 { color: #0055a4; }
+    .system { font-size: 1.2em; margin-bottom: 20px; padding: 15px; background: #f4f4f4; border-radius: 8px; display: inline-block;}
+    .step { display: none; margin-bottom: 30px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; }
+    .step.active { display: block; }
+    .equation-row { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;}
+    
+    /* Matrix Styling */
+    .matrix { display: grid; gap: 5px; padding: 5px 10px; border-left: 2px solid #333; border-right: 2px solid #333; border-radius: 3px; }
+    .matrix-2x2 { grid-template-columns: 1fr 1fr; }
+    .matrix-2x1 { grid-template-columns: 1fr; }
+    
+    input { width: 40px; height: 30px; text-align: center; font-size: 1em; border: 1px solid #ccc; border-radius: 4px; }
+    .fraction { display: flex; flex-direction: column; align-items: center; font-size: 1.1em; }
+    .fraction input { width: 50px; }
+    .frac-line { border-top: 2px solid #333; width: 100%; margin: 2px 0; }
+    
+    button { padding: 8px 16px; background-color: #0055a4; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; }
+    button:hover { background-color: #003d7a; }
+    .feedback { font-weight: bold; margin-left: 15px; }
+    .correct { color: green; }
+    .incorrect { color: red; }
+</style>
+</head>
+<body>
+
+    <h2>Solve the System using an Inverse Matrix</h2>
+    <div class="system">
+        2x + 3y = 8<br>
+        5x - y = 3
+    </div>
+
+    <div id="step1" class="step active">
+        <h3>Step 1: Set up the matrix equation (AX = B)</h3>
+        <div class="equation-row">
+            <div class="matrix matrix-2x2">
+                <input type="number" id="a11"> <input type="number" id="a12">
+                <input type="number" id="a21"> <input type="number" id="a22">
+            </div>
+            <div> * </div>
+            <div class="matrix matrix-2x1">
+                <div>x</div>
+                <div>y</div>
+            </div>
+            <div> = </div>
+            <div class="matrix matrix-2x1">
+                <input type="number" id="b1">
+                <input type="number" id="b2">
+            </div>
+        </div>
+        <button onclick="checkStep1()">Check Step 1</button>
+        <span id="feed1" class="feedback"></span>
+    </div>
+
+    <div id="step2" class="step">
+        <h3>Step 2: Isolate X using the Inverse (1/det * Adjugate)</h3>
+        <div class="equation-row">
+            <div class="matrix matrix-2x1">
+                <div>x</div>
+                <div>y</div>
+            </div>
+            <div> = </div>
+            <div class="fraction">
+                <span>1</span>
+                <div class="frac-line"></div>
+                <input type="number" id="det" placeholder="det">
+            </div>
+            <div class="matrix matrix-2x2">
+                <input type="number" id="adj11"> <input type="number" id="adj12">
+                <input type="number" id="adj21"> <input type="number" id="adj22">
+            </div>
+            <div> * </div>
+            <div class="matrix matrix-2x1">
+                <div>8</div>
+                <div>3</div>
+            </div>
+        </div>
+        <button onclick="checkStep2()">Check Step 2</button>
+        <span id="feed2" class="feedback"></span>
+    </div>
+
+    <div id="step3" class="step">
+        <h3>Step 3: Multiply the Adjugate by Matrix B</h3>
+        <div class="equation-row">
+            <div class="matrix matrix-2x1">
+                <div>x</div>
+                <div>y</div>
+            </div>
+            <div> = </div>
+            <div class="fraction">
+                <span>1</span>
+                <div class="frac-line"></div>
+                <span>-17</span>
+            </div>
+            <div class="matrix matrix-2x1">
+                <input type="number" id="mult1">
+                <input type="number" id="mult2">
+            </div>
+        </div>
+        <button onclick="checkStep3()">Check Step 3</button>
+        <span id="feed3" class="feedback"></span>
+    </div>
+
+    <div id="step4" class="step">
+        <h3>Step 4: Final Solution (Multiply by the scalar)</h3>
+        <div class="equation-row">
+            <div class="matrix matrix-2x1">
+                <div>x</div>
+                <div>y</div>
+            </div>
+            <div> = </div>
+            <div class="matrix matrix-2x1">
+                <input type="number" id="finalX">
+                <input type="number" id="finalY">
+            </div>
+        </div>
+        <button onclick="checkStep4()">Check Step 4</button>
+        <span id="feed4" class="feedback"></span>
+    </div>
+
+<script>
+    function checkStep1() {
+        let a11 = document.getElementById('a11').value; let a12 = document.getElementById('a12').value;
+        let a21 = document.getElementById('a21').value; let a22 = document.getElementById('a22').value;
+        let b1 = document.getElementById('b1').value;   let b2 = document.getElementById('b2').value;
+        
+        if(a11 == '2' && a12 == '3' && a21 == '5' && a22 == '-1' && b1 == '8' && b2 == '3') {
+            document.getElementById('feed1').innerHTML = "Correct!";
+            document.getElementById('feed1').className = "feedback correct";
+            document.getElementById('step2').classList.add('active');
+        } else {
+            document.getElementById('feed1').innerHTML = "Incorrect, try again.";
+            document.getElementById('feed1').className = "feedback incorrect";
+        }
+    }
+
+    function checkStep2() {
+        let det = document.getElementById('det').value;
+        let a11 = document.getElementById('adj11').value; let a12 = document.getElementById('adj12').value;
+        let a21 = document.getElementById('adj21').value; let a22 = document.getElementById('adj22').value;
+        
+        if(det == '-17' && a11 == '-1' && a12 == '-3' && a21 == '-5' && a22 == '2') {
+            document.getElementById('feed2').innerHTML = "Correct!";
+            document.getElementById('feed2').className = "feedback correct";
+            document.getElementById('step3').classList.add('active');
+        } else {
+            document.getElementById('feed2').innerHTML = "Incorrect, try again.";
+            document.getElementById('feed2').className = "feedback incorrect";
+        }
+    }
+
+    function checkStep3() {
+        let m1 = document.getElementById('mult1').value;
+        let m2 = document.getElementById('mult2').value;
+        
+        if(m1 == '-17' && m2 == '-34') {
+            document.getElementById('feed3').innerHTML = "Correct!";
+            document.getElementById('feed3').className = "feedback correct";
+            document.getElementById('step4').classList.add('active');
+        } else {
+            document.getElementById('feed3').innerHTML = "Incorrect, try again.";
+            document.getElementById('feed3').className = "feedback incorrect";
+        }
+    }
+
+    function checkStep4() {
+        let fx = document.getElementById('finalX').value;
+        let fy = document.getElementById('finalY').value;
+        
+        if(fx == '1' && fy == '2') {
+            document.getElementById('feed4').innerHTML = "Correct! You solved the system.";
+            document.getElementById('feed4').className = "feedback correct";
+        } else {
+            document.getElementById('feed4').innerHTML = "Incorrect, try again.";
+            document.getElementById('feed4').className = "feedback incorrect";
+        }
+    }
+</script>
+</body>
+</html>

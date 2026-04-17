@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>3x3 Determinant (Diagonal Method)</title>
+<style>
+    body { font-family: sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 20px auto; padding: 20px; }
+    h2 { color: #0055a4; margin-top: 0;}
+    .controls { margin-bottom: 20px; text-align: center; }
+    .generate-btn { padding: 12px 24px; background-color: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 1.2em; font-weight: bold; }
+    .generate-btn:hover { background-color: #218838; }
+    .problem-container { border: 2px solid #0055a4; padding: 20px; border-radius: 8px; margin-bottom: 40px; background: #fafafa; }
+    
+    .step { display: none; margin-bottom: 30px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background: #fff;}
+    .step.active { display: block; }
+    .equation-row { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;}
+    
+    /* 3x3 Matrix specific styling */
+    .matrix-3x3 { display: grid; gap: 8px; padding: 10px 15px; border-left: 2px solid #333; border-right: 2px solid #333; border-radius: 3px; grid-template-columns: repeat(3, 1fr); text-align: center; font-size: 1.2em; font-weight: bold; background: #fff;}
+    .copied-cols { display: grid; gap: 8px; padding: 10px 0; grid-template-columns: repeat(2, 1fr); border-left: 2px dashed #999; padding-left: 15px;}
+    
+    input { width: 50px; height: 35px; text-align: center; font-size: 1em; border: 1px solid #ccc; border-radius: 4px; }
+    .large-input { width: 70px; }
+    button.check-btn { padding: 8px 16px; background-color: #0055a4; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; }
+    button.check-btn:hover { background-color: #003d7a; }
+    .feedback { font-weight: bold; margin-left: 15px; }
+    .correct { color: green; }
+    .incorrect { color: red; }
+</style>
+</head>
+<body onload="addProblem()">
+
+    <div class="controls">
+        <button class="generate-btn" onclick="addProblem()">+ Generate New Problem</button>
+    </div>
+    <div id="all-problems"></div>
+
+<script>
+    const solutions = {};
+    let problemCount = 0;
+
+    // Keep numbers small (-5 to 5) for manual multiplication
+    function randSmall() {
+        let val;
+        do { val = Math.floor(Math.random() * 11) - 5; } while(val === 0);
+        return val;
+    }
+
+    function addProblem() {
+        problemCount++;
+        let pId = problemCount;
+        
+        let m11 = randSmall(), m12 = randSmall(), m13 = randSmall();
+        let m21 = randSmall(), m22 = randSmall(), m23 = randSmall();
+        let m31 = randSmall(), m32 = randSmall(), m33 = randSmall();
+
+        // Calculate Downward Diagonals
+        let d1 = m11 * m22 * m33;
+        let d2 = m12 * m23 * m31;
+        let d3 = m13 * m21 * m32;
+        let downSum = d1 + d2 + d3;
+
+        // Calculate Upward Diagonals
+        let u1 = m31 * m22 * m13;
+        let u2 = m32 * m23 * m11;
+        let u3 = m33 * m21 * m12;
+        let upSum = u1 + u2 + u3;
+
+        let finalDet = downSum - upSum;
+
+        solutions[pId] = { m11, m12, m21, m22, m31, m32, downSum, upSum, finalDet };
+
+        let html = `
+        <div class="problem-container" id="prob-${pId}">
+            <h2>Problem #${pId}</h2>
+            
+            <div id="step1-${pId}" class="step active">
+                <h3>Step 1: Set up the Diagonal Method</h3>
+                <p>Copy the first two columns to the right side of the matrix.</p>
+                <div class="equation-row">
+                    <div class="matrix-3x3">
+                        <div>${m11}</div> <div>${m12}</div> <div>${m13}</div>
+                        <div>${m21}</div> <div>${m22}</div> <div>${m23}</div>
+                        <div>${m31}</div> <div>${m32}</div> <div>${m33}</div>
+                    </div>
+                    <div class="copied-cols">
+                        <input type="number" id="c11-${pId}"> <input type="number" id="c12-${pId}">
+                        <input type="number" id="c21-${pId}"> <input type="number" id="c22-${pId}">
+                        <input type="number" id="c31-${pId}"> <input type="number" id="c32-${pId}">
+                    </div>
+                </div>
+                <button class="check-btn" onclick="checkStep1(${pId})">Check Setup</button>
+                <span id="feed1-${pId}" class="feedback"></span>
+            </div>
+
+            <div id="step2-${pId}" class="step">
+                <h3>Step 2: Multiply and Add the Diagonals</h3>
+                <div class="equation-row">
+                    <input type="number" class="large-input" id="down-${pId}" placeholder="Down"> 
+                    <div style="font-size: 1.5em; font-weight: bold;"> &minus; </div> 
+                    <input type="number" class="large-input" id="up-${pId}" placeholder="Up">
+                </div>
+                <button class="check-btn" onclick="checkStep2(${pId})">Check Sums</button>
+                <span id="feed2-${pId}" class="feedback"></span>
+            </div>
+
+            <div id="step3-${pId}" class="step">
+                <h3>Step 3: Calculate the Final Determinant</h3>
+                <div class="equation-row">
+                    <div><b>Determinant =</b> <input type="number" class="large-input" id="finalDet-${pId}"></div>
+                </div>
+                <button class="check-btn" onclick="checkStep3(${pId})">Check Solution</button>
+                <span id="feed3-${pId}" class="feedback"></span>
+            </div>
+        </div>`;
+        document.getElementById('all-problems').insertAdjacentHTML('afterbegin', html);
+    }
+
+    function checkStep1(pId) {
+        let s = solutions[pId];
+        let c11 = parseInt(document.getElementById(`c11-${pId}`).value); let c12 = parseInt(document.getElementById(`c12-${pId}`).value);
+        let c21 = parseInt(document.getElementById(`c21-${pId}`).value); let c22 = parseInt(document.getElementById(`c22-${pId}`).value);
+        let c31 = parseInt(document.getElementById(`c31-${pId}`).value); let c32 = parseInt(document.getElementById(`c32-${pId}`).value);
+
+        if(c11===s.m11 && c12===s.m12 && c21===s.m21 && c22===s.m22 && c31===s.m31 && c32===s.m32) {
+            document.getElementById(`feed1-${pId}`).innerHTML = "Correct!";
+            document.getElementById(`feed1-${pId}`).className = "feedback correct";
+            document.getElementById(`step2-${pId}`).classList.add('active');
+        } else {
+            document.getElementById(`feed1-${pId}`).innerHTML = "Incorrect. Remember to copy column 1 and column 2 exactly.";
+            document.getElementById(`feed1-${pId}`).className = "feedback incorrect";
+        }
+    }
+
+    function checkStep2(pId) {
+        let s = solutions[pId];
+        let down = parseInt(document.getElementById(`down-${pId}`).value);
+        let up = parseInt(document.getElementById(`up-${pId}`).value);
+        
+        if(down === s.downSum && up === s.upSum) {
+            document.getElementById(`feed2-${pId}`).innerHTML = "Correct!";
+            document.getElementById(`feed2-${pId}`).className = "feedback correct";
+            document.getElementById(`step3-${pId}`).classList.add('active');
+        } else {
+            document.getElementById(`feed2-${pId}`).innerHTML = "Incorrect. Check your multiplication and addition.";
+            document.getElementById(`feed2-${pId}`).className = "feedback incorrect";
+        }
+    }
+
+    function checkStep3(pId) {
+        let s = solutions[pId];
+        let det = parseInt(document.getElementById(`finalDet-${pId}`).value);
+        if(det === s.finalDet) {
+            document.getElementById(`feed3-${pId}`).innerHTML = "Correct! You found the determinant.";
+            document.getElementById(`feed3-${pId}`).className = "feedback correct";
+        } else {
+            document.getElementById(`feed3-${pId}`).innerHTML = "Incorrect. Subtract the Upward sum from the Downward sum.";
+            document.getElementById(`feed3-${pId}`).className = "feedback incorrect";
+        }
+    }
+</script>
+</body>
+</html>

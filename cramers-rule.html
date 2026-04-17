@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cramer's Rule Solver</title>
+<style>
+    body { font-family: sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 20px auto; padding: 20px; }
+    h2 { color: #0055a4; margin-top: 0;}
+    .controls { margin-bottom: 20px; text-align: center; }
+    .generate-btn { padding: 12px 24px; background-color: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 1.2em; font-weight: bold; }
+    .generate-btn:hover { background-color: #218838; }
+    .problem-container { border: 2px solid #0055a4; padding: 20px; border-radius: 8px; margin-bottom: 40px; background: #fafafa; }
+    .system { font-size: 1.3em; margin-bottom: 20px; padding: 15px; background: #fff; border: 1px solid #ddd; border-radius: 8px; display: inline-block; font-weight: bold;}
+    .step { display: none; margin-bottom: 30px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background: #fff;}
+    .step.active { display: block; }
+    .equation-row { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;}
+    .matrix-wrapper { display: flex; flex-direction: column; align-items: center; }
+    .matrix-label { font-weight: bold; margin-bottom: 5px; font-size: 1.2em; }
+    .matrix { display: grid; gap: 5px; padding: 5px 10px; border-left: 2px solid #333; border-right: 2px solid #333; border-radius: 3px; grid-template-columns: 1fr 1fr; }
+    input { width: 45px; height: 35px; text-align: center; font-size: 1em; border: 1px solid #ccc; border-radius: 4px; }
+    button.check-btn { padding: 8px 16px; background-color: #0055a4; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; }
+    button.check-btn:hover { background-color: #003d7a; }
+    .feedback { font-weight: bold; margin-left: 15px; }
+    .correct { color: green; }
+    .incorrect { color: red; }
+</style>
+</head>
+<body onload="addProblem()">
+
+    <div class="controls">
+        <button class="generate-btn" onclick="addProblem()">+ Generate New Problem</button>
+    </div>
+    <div id="all-problems"></div>
+
+<script>
+    const solutions = {};
+    let problemCount = 0;
+
+    function rand() {
+        let val;
+        do { val = Math.floor(Math.random() * 19) - 9; } while(val === 0);
+        return val;
+    }
+
+    function addProblem() {
+        problemCount++;
+        let pId = problemCount;
+        let a11, a12, a21, a22, D, x, y, b1, b2;
+        
+        do {
+            a11 = rand(); a12 = rand();
+            a21 = rand(); a22 = rand();
+            D = (a11 * a22) - (a12 * a21);
+        } while(D === 0);
+
+        x = rand(); y = rand();
+        b1 = a11 * x + a12 * y;
+        b2 = a21 * x + a22 * y;
+
+        let Dx = (b1 * a22) - (a12 * b2);
+        let Dy = (a11 * b2) - (b1 * a21);
+
+        solutions[pId] = { a11, a12, a21, a22, b1, b2, D, Dx, Dy, x, y };
+
+        let sign1 = a12 < 0 ? "-" : "+";
+        let sign2 = a22 < 0 ? "-" : "+";
+        let html = `
+        <div class="problem-container" id="prob-${pId}">
+            <h2>Problem #${pId}</h2>
+            <div class="system">
+                ${a11}x ${sign1} ${Math.abs(a12)}y = ${b1}<br>
+                ${a21}x ${sign2} ${Math.abs(a22)}y = ${b2}
+            </div>
+
+            <div id="step1-${pId}" class="step active">
+                <h3>Step 1: Set up the Matrices</h3>
+                <div class="equation-row">
+                    <div class="matrix-wrapper">
+                        <div class="matrix-label">D</div>
+                        <div class="matrix">
+                            <input type="number" id="d11-${pId}"> <input type="number" id="d12-${pId}">
+                            <input type="number" id="d21-${pId}"> <input type="number" id="d22-${pId}">
+                        </div>
+                    </div>
+                    <div class="matrix-wrapper">
+                        <div class="matrix-label">D_x</div>
+                        <div class="matrix">
+                            <input type="number" id="dx11-${pId}"> <input type="number" id="dx12-${pId}">
+                            <input type="number" id="dx21-${pId}"> <input type="number" id="dx22-${pId}">
+                        </div>
+                    </div>
+                    <div class="matrix-wrapper">
+                        <div class="matrix-label">D_y</div>
+                        <div class="matrix">
+                            <input type="number" id="dy11-${pId}"> <input type="number" id="dy12-${pId}">
+                            <input type="number" id="dy21-${pId}"> <input type="number" id="dy22-${pId}">
+                        </div>
+                    </div>
+                </div>
+                <button class="check-btn" onclick="checkStep1(${pId})">Check Matrices</button>
+                <span id="feed1-${pId}" class="feedback"></span>
+            </div>
+
+            <div id="step2-${pId}" class="step">
+                <h3>Step 2: Find the Determinants</h3>
+                <div class="equation-row">
+                    <div><b>D =</b> <input type="number" id="detD-${pId}"></div>
+                    <div><b>D_x =</b> <input type="number" id="detDx-${pId}"></div>
+                    <div><b>D_y =</b> <input type="number" id="detDy-${pId}"></div>
+                </div>
+                <button class="check-btn" onclick="checkStep2(${pId})">Check Determinants</button>
+                <span id="feed2-${pId}" class="feedback"></span>
+            </div>
+
+            <div id="step3-${pId}" class="step">
+                <h3>Step 3: Solve for x and y</h3>
+                <p><i>Hint: x = D_x / D, and y = D_y / D</i></p>
+                <div class="equation-row">
+                    <div><b>x =</b> <input type="number" id="finalX-${pId}"></div>
+                    <div><b>y =</b> <input type="number" id="finalY-${pId}"></div>
+                </div>
+                <button class="check-btn" onclick="checkStep3(${pId})">Check Solution</button>
+                <span id="feed3-${pId}" class="feedback"></span>
+            </div>
+        </div>`;
+        document.getElementById('all-problems').insertAdjacentHTML('afterbegin', html);
+    }
+
+    function checkStep1(pId) {
+        let s = solutions[pId];
+        let d11 = parseInt(document.getElementById(`d11-${pId}`).value); let d12 = parseInt(document.getElementById(`d12-${pId}`).value);
+        let d21 = parseInt(document.getElementById(`d21-${pId}`).value); let d22 = parseInt(document.getElementById(`d22-${pId}`).value);
+        let dx11 = parseInt(document.getElementById(`dx11-${pId}`).value); let dx12 = parseInt(document.getElementById(`dx12-${pId}`).value);
+        let dx21 = parseInt(document.getElementById(`dx21-${pId}`).value); let dx22 = parseInt(document.getElementById(`dx22-${pId}`).value);
+        let dy11 = parseInt(document.getElementById(`dy11-${pId}`).value); let dy12 = parseInt(document.getElementById(`dy12-${pId}`).value);
+        let dy21 = parseInt(document.getElementById(`dy21-${pId}`).value); let dy22 = parseInt(document.getElementById(`dy22-${pId}`).value);
+
+        if(d11===s.a11 && d12===s.a12 && d21===s.a21 && d22===s.a22 && 
+           dx11===s.b1 && dx12===s.a12 && dx21===s.b2 && dx22===s.a22 &&
+           dy11===s.a11 && dy12===s.b1 && dy21===s.a21 && dy22===s.b2) {
+            document.getElementById(`feed1-${pId}`).innerHTML = "Correct!";
+            document.getElementById(`feed1-${pId}`).className = "feedback correct";
+            document.getElementById(`step2-${pId}`).classList.add('active');
+        } else {
+            document.getElementById(`feed1-${pId}`).innerHTML = "Incorrect matrices. Try again.";
+            document.getElementById(`feed1-${pId}`).className = "feedback incorrect";
+        }
+    }
+
+    function checkStep2(pId) {
+        let s = solutions[pId];
+        let D = parseInt(document.getElementById(`detD-${pId}`).value);
+        let Dx = parseInt(document.getElementById(`detDx-${pId}`).value);
+        let Dy = parseInt(document.getElementById(`detDy-${pId}`).value);
+        if(D === s.D && Dx === s.Dx && Dy === s.Dy) {
+            document.getElementById(`feed2-${pId}`).innerHTML = "Correct!";
+            document.getElementById(`feed2-${pId}`).className = "feedback correct";
+            document.getElementById(`step3-${pId}`).classList.add('active');
+        } else {
+            document.getElementById(`feed2-${pId}`).innerHTML = "Incorrect determinants. Try again.";
+            document.getElementById(`feed2-${pId}`).className = "feedback incorrect";
+        }
+    }
+
+    function checkStep3(pId) {
+        let s = solutions[pId];
+        let x = parseInt(document.getElementById(`finalX-${pId}`).value);
+        let y = parseInt(document.getElementById(`finalY-${pId}`).value);
+        if(x === s.x && y === s.y) {
+            document.getElementById(`feed3-${pId}`).innerHTML = "Correct! You solved the system.";
+            document.getElementById(`feed3-${pId}`).className = "feedback correct";
+        } else {
+            document.getElementById(`feed3-${pId}`).innerHTML = "Incorrect. Try again.";
+            document.getElementById(`feed3-${pId}`).className = "feedback incorrect";
+        }
+    }
+</script>
+</body>
+</html>

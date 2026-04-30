@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Skill 3: Interpretation</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #ffffff; color: #333; padding: 15px; }
+        .card { background: #f9f9f9; padding: 20px; border-radius: 8px; border-left: 5px solid #28a745; }
+        select, button { padding: 10px; font-size: 16px; margin-top: 10px; border-radius: 5px; }
+        button { background-color: #28a745; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #218838; }
+        .feedback { font-weight: bold; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h3 style="margin-top: 0; color: #28a745;">Skill 3: The Final Decision</h3>
+        <p style="font-size: 18px;">You run a t-Test at the <strong><span id="sig-text"></span> significance level</strong>.</p>
+        <p style="font-size: 18px;">Your calculator gives you a <strong>p-value of <span id="pval-text"></span></strong>.</p>
+        
+        <label><strong>1. Compare them:</strong></label><br>
+        <select id="comp-select">
+            <option value="none">-- Select --</option>
+            <option value="low">The p-value is LESS than the significance level</option>
+            <option value="high">The p-value is GREATER than the significance level</option>
+        </select><br><br>
+
+        <label><strong>2. What is your conclusion?</strong></label><br>
+        <select id="conc-select">
+            <option value="none">-- Select --</option>
+            <option value="reject">Reject the Null Hypothesis (H₀)</option>
+            <option value="accept">Accept the Null Hypothesis (H₀)</option>
+        </select><br><br>
+
+        <button onclick="checkConclusion()">Check Logic</button>
+        <button onclick="generateData()" style="background-color: #004080;">New p-value</button>
+        <div id="feedback" class="feedback"></div>
+    </div>
+
+    <script>
+        let sigLevel = 0;
+        let pValue = 0;
+        let pIsLow = false;
+
+        function generateData() {
+            const sigs = [0.01, 0.05, 0.10];
+            sigLevel = sigs[Math.floor(Math.random() * sigs.length)];
+            
+            // Generate a random p-value between 0.001 and 0.150
+            pValue = (Math.random() * 0.149 + 0.001).toFixed(3);
+            pIsLow = (pValue < sigLevel);
+
+            document.getElementById("sig-text").innerText = (sigLevel * 100) + "% (" + sigLevel.toFixed(2) + ")";
+            document.getElementById("pval-text").innerText = pValue;
+            
+            document.getElementById("comp-select").value = "none";
+            document.getElementById("conc-select").value = "none";
+            document.getElementById("feedback").innerHTML = "";
+        }
+
+        function checkConclusion() {
+            let comp = document.getElementById("comp-select").value;
+            let conc = document.getElementById("conc-select").value;
+            
+            if (comp === "none" || conc === "none") {
+                document.getElementById("feedback").innerHTML = "<span style='color: orange;'>Please select an answer for both drop-downs.</span>";
+                return;
+            }
+
+            let compCorrect = (pIsLow && comp === "low") || (!pIsLow && comp === "high");
+            let concCorrect = (pIsLow && conc === "reject") || (!pIsLow && conc === "accept");
+
+            if (compCorrect && concCorrect) {
+                document.getElementById("feedback").innerHTML = "<span style='color: green;'>✅ Flawless Logic! If p is low, H₀ must go!</span>";
+            } else {
+                document.getElementById("feedback").innerHTML = "<span style='color: red;'>❌ Something isn't right. Check your inequality logic.</span>";
+            }
+        }
+
+        window.onload = generateData;
+    </script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Skill 2: GDC Mechanics</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #ffffff; color: #333; padding: 15px; }
+        .card { background: #f9f9f9; padding: 20px; border-radius: 8px; border-left: 5px solid #d9534f; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; background: white; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background-color: #eee; }
+        input, button { padding: 8px; font-size: 16px; border-radius: 5px; }
+        button { background-color: #d9534f; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #c9302c; }
+        .feedback { font-weight: bold; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h3 style="margin-top: 0; color: #d9534f;">Skill 2: GDC Mechanics</h3>
+        <p>Run a 2-Sample t-Test (Pooled = Yes) using the data below. Set your calculator's Alternate Hypothesis to match the one requested.</p>
+        
+        <p><strong>Test this Hypothesis:</strong> <span id="hyp-text" style="font-weight:bold; color:#004080; font-size: 18px;"></span></p>
+        
+        <div id="table-container"></div>
+
+        <label><strong>Enter your p-value:</strong></label>
+        <input type="number" id="p-input" step="0.001" style="width: 100px;">
+        
+        <button onclick="checkPValue()">Check p-value</button>
+        <button onclick="loadData()" style="background-color: #004080;">New Data Table</button>
+        <div id="feedback" class="feedback"></div>
+    </div>
+
+    <script>
+        // Pre-calculated data banks so it matches the TI-Nspire perfectly
+        const databank = [
+            { g1: [14, 18, 12, 15, 19, 14], g2: [22, 19, 21, 24, 18], hypText: "H₁: μ₁ < μ₂", pval: 0.0016 },
+            { g1: [85, 88, 82, 90, 87, 81], g2: [80, 82, 79, 85, 81, 78], hypText: "H₁: μ₁ > μ₂", pval: 0.0051 },
+            { g1: [5.2, 5.8, 6.1, 5.4, 5.9], g2: [5.1, 5.5, 5.9, 5.3, 5.8], hypText: "H₁: μ₁ ≠ μ₂", pval: 0.5057 },
+            { g1: [102, 105, 99, 101, 108], g2: [110, 109, 115, 106], hypText: "H₁: μ₁ ≠ μ₂", pval: 0.0135 },
+            { g1: [33, 31, 35, 34, 32, 36], g2: [34, 36, 38, 35, 37], hypText: "H₁: μ₁ < μ₂", pval: 0.0210 }
+        ];
+
+        let current = {};
+
+        function loadData() {
+            current = databank[Math.floor(Math.random() * databank.length)];
+            document.getElementById("hyp-text").innerHTML = current.hypText;
+            
+            let html = "<table><tr><th>Group 1 (μ₁)</th>";
+            current.g1.forEach(num => html += `<td>${num}</td>`);
+            html += "</tr><tr><th>Group 2 (μ₂)</th>";
+            current.g2.forEach(num => html += `<td>${num}</td>`);
+            // Pad empty cells if unequal
+            let diff = current.g1.length - current.g2.length;
+            if (diff > 0) for(let i=0; i<diff; i++) html += "<td></td>";
+            if (diff < 0) {
+                let topRowAdd = "";
+                for(let i=0; i<Math.abs(diff); i++) topRowAdd += "<td></td>";
+                html = html.replace("</tr><tr><th>Group 2", topRowAdd + "</tr><tr><th>Group 2");
+            }
+            html += "</tr></table>";
+            
+            document.getElementById("table-container").innerHTML = html;
+            document.getElementById("p-input").value = "";
+            document.getElementById("feedback").innerHTML = "";
+        }
+
+        function checkPValue() {
+            let userP = parseFloat(document.getElementById("p-input").value);
+            if (isNaN(userP)) {
+                document.getElementById("feedback").innerHTML = "<span style='color: orange;'>Please enter a number.</span>";
+                return;
+            }
+            
+            // Allow a small tolerance for rounding differences (e.g. 0.0051 vs 0.005)
+            if (Math.abs(userP - current.pval) <= 0.005) {
+                document.getElementById("feedback").innerHTML = `<span style='color: green;'>✅ Correct! The exact p-value is ${current.pval}</span>`;
+            } else {
+                document.getElementById("feedback").innerHTML = "<span style='color: red;'>❌ Incorrect. Double-check your lists and your Alternate Hypothesis setting!</span>";
+            }
+        }
+
+        window.onload = loadData;
+    </script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conditional Probability Drill</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        h3 {
+            color: #00467F;
+            margin-top: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            text-align: center;
+        }
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+        }
+        th {
+            background-color: #e9ecef;
+            color: #00467F;
+        }
+        .question-box {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        input[type="number"] {
+            width: 70px;
+            padding: 8px;
+            font-size: 1em;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .fraction-line {
+            font-size: 1.5em;
+            color: #555;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .btn-check {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-check:hover { background-color: #218838; }
+        .btn-new {
+            background-color: #00467F;
+            color: white;
+            margin-left: 10px;
+        }
+        .btn-new:hover { background-color: #003366; }
+        #feedback {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3>Skill Practice: Shrinking the Sample Space</h3>
+    <p>Use the table below to find the probability. Do not simplify your fraction—just find the correct numbers!</p>
+    
+    <table id="dataTable">
+        <tr>
+            <th></th>
+            <th>Art Class</th>
+            <th>Theater Class</th>
+            <th>Total</th>
+        </tr>
+        <tr>
+            <th>Juniors</th>
+            <td id="cell-a"></td>
+            <td id="cell-b"></td>
+            <td id="row1-total" style="font-weight:bold;"></td>
+        </tr>
+        <tr>
+            <th>Seniors</th>
+            <td id="cell-c"></td>
+            <td id="cell-d"></td>
+            <td id="row2-total" style="font-weight:bold;"></td>
+        </tr>
+        <tr>
+            <th>Total</th>
+            <td id="col1-total" style="font-weight:bold;"></td>
+            <td id="col2-total" style="font-weight:bold;"></td>
+            <td id="grand-total" style="font-weight:bold;"></td>
+        </tr>
+    </table>
+
+    <div class="question-box" id="questionText"></div>
+
+    <div class="input-group">
+        P = 
+        <input type="number" id="numInput" placeholder="Numerator">
+        <span class="fraction-line">/</span>
+        <input type="number" id="denInput" placeholder="Denominator">
+    </div>
+
+    <div>
+        <button class="btn-check" onclick="checkAnswer()">Check Answer</button>
+        <button class="btn-new" onclick="generateProblem()">New Problem</button>
+    </div>
+
+    <div id="feedback"></div>
+</div>
+
+<script>
+    let correctNum = 0;
+    let correctDen = 0;
+
+    function randInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function generateProblem() {
+        // Clear previous
+        document.getElementById('numInput').value = '';
+        document.getElementById('denInput').value = '';
+        document.getElementById('feedback').innerHTML = '';
+        document.getElementById('numInput').style.borderColor = '#ccc';
+        document.getElementById('denInput').style.borderColor = '#ccc';
+
+        // Generate data
+        let a = randInt(10, 40);
+        let b = randInt(10, 40);
+        let c = randInt(10, 40);
+        let d = randInt(10, 40);
+
+        let row1 = a + b;
+        let row2 = c + d;
+        let col1 = a + c;
+        let col2 = b + d;
+        let grand = a + b + c + d;
+
+        // Fill table
+        document.getElementById('cell-a').innerText = a;
+        document.getElementById('cell-b').innerText = b;
+        document.getElementById('cell-c').innerText = c;
+        document.getElementById('cell-d').innerText = d;
+        document.getElementById('row1-total').innerText = row1;
+        document.getElementById('row2-total').innerText = row2;
+        document.getElementById('col1-total').innerText = col1;
+        document.getElementById('col2-total').innerText = col2;
+        document.getElementById('grand-total').innerText = grand;
+
+        // Pick a question type
+        let qType = randInt(1, 4);
+        let qText = "";
+
+        if (qType === 1) {
+            qText = "Given that a randomly selected student is a <b>Junior</b>, what is the probability they take Art?";
+            correctNum = a;
+            correctDen = row1;
+        } else if (qType === 2) {
+            qText = "If you choose a student from <b>Theater Class</b>, what is the probability they are a Senior?";
+            correctNum = d;
+            correctDen = col2;
+        } else if (qType === 3) {
+            qText = "Find P(Junior | Art Class). <br><small><i>(Hint: What group is your condition?)</i></small>";
+            correctNum = a;
+            correctDen = col1;
+        } else {
+            qText = "Find P(Theater Class | Senior). <br><small><i>(Hint: What group is your condition?)</i></small>";
+            correctNum = d;
+            correctDen = row2;
+        }
+
+        document.getElementById('questionText').innerHTML = qText;
+    }
+
+    function checkAnswer() {
+        let userNum = parseInt(document.getElementById('numInput').value);
+        let userDen = parseInt(document.getElementById('denInput').value);
+        let feedback = document.getElementById('feedback');
+
+        if (userNum === correctNum && userDen === correctDen) {
+            feedback.innerHTML = "✅ Correct! You isolated the correct group.";
+            feedback.style.color = "#28a745";
+            document.getElementById('numInput').style.borderColor = "#28a745";
+            document.getElementById('denInput').style.borderColor = "#28a745";
+        } else {
+            feedback.innerHTML = "❌ Try Again. Double check what group you are pulling your total from.";
+            feedback.style.color = "#dc3545";
+            document.getElementById('numInput').style.borderColor = "#dc3545";
+            document.getElementById('denInput').style.borderColor = "#dc3545";
+        }
+    }
+
+    // Init
+    generateProblem();
+</script>
+
+</body>
+</html>

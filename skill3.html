@@ -38,19 +38,16 @@
 
     <script>
         let sigLevel = 0;
-        let pValue = 0;
-        let pIsLow = false;
+        let pValueString = "0";
 
         function generateData() {
             const sigs = [0.01, 0.05, 0.10];
             sigLevel = sigs[Math.floor(Math.random() * sigs.length)];
             
-            // Generate a random p-value between 0.001 and 0.150
-            pValue = (Math.random() * 0.149 + 0.001).toFixed(3);
-            pIsLow = (pValue < sigLevel);
+            pValueString = (Math.random() * 0.149 + 0.001).toFixed(3);
 
             document.getElementById("sig-text").innerText = (sigLevel * 100) + "% (" + sigLevel.toFixed(2) + ")";
-            document.getElementById("pval-text").innerText = pValue;
+            document.getElementById("pval-text").innerText = pValueString;
             
             document.getElementById("comp-select").value = "none";
             document.getElementById("conc-select").value = "none";
@@ -66,8 +63,13 @@
                 return;
             }
 
-            let compCorrect = (pIsLow && comp === "low") || (!pIsLow && comp === "high");
-            let concCorrect = (pIsLow && conc === "reject") || (!pIsLow && conc === "accept");
+            // Fixed logic to parse floats before comparison!
+            let numericP = parseFloat(pValueString);
+            let numericSig = parseFloat(sigLevel);
+            let actualIsLow = (numericP < numericSig);
+
+            let compCorrect = (actualIsLow && comp === "low") || (!actualIsLow && comp === "high");
+            let concCorrect = (actualIsLow && conc === "reject") || (!actualIsLow && conc === "accept");
 
             if (compCorrect && concCorrect) {
                 document.getElementById("feedback").innerHTML = "<span style='color: green;'>✅ Flawless Logic! If p is low, H₀ must go!</span>";

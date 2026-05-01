@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conditional Probability Drill</title>
+    <title>Conditional & Standard Probability Drill</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -31,6 +31,7 @@
             border-collapse: collapse;
             margin: 20px 0;
             text-align: center;
+            font-size: 1.1em;
         }
         th, td {
             border: 1px solid #dee2e6;
@@ -46,6 +47,7 @@
             border-radius: 6px;
             margin-bottom: 20px;
             font-size: 1.1em;
+            line-height: 1.4;
         }
         .input-group {
             display: flex;
@@ -96,8 +98,8 @@
 <body>
 
 <div class="container">
-    <h3>Skill Practice: Shrinking the Sample Space</h3>
-    <p>Use the table below to find the probability. Do not simplify your fraction—just find the correct numbers!</p>
+    <h3>Skill Practice: Reading the Table</h3>
+    <p>Read the question carefully! Are you looking at the <strong>whole group</strong>, or are you zoomed in on a <strong>specific condition</strong>? Do not simplify your fraction.</p>
     
     <table id="dataTable">
         <tr>
@@ -122,7 +124,7 @@
             <th>Total</th>
             <td id="col1-total" style="font-weight:bold;"></td>
             <td id="col2-total" style="font-weight:bold;"></td>
-            <td id="grand-total" style="font-weight:bold;"></td>
+            <td id="grand-total" style="font-weight:bold; color: #d9534f;"></td>
         </tr>
     </table>
 
@@ -130,9 +132,9 @@
 
     <div class="input-group">
         P = 
-        <input type="number" id="numInput" placeholder="Numerator">
+        <input type="number" id="numInput" placeholder="Num">
         <span class="fraction-line">/</span>
-        <input type="number" id="denInput" placeholder="Denominator">
+        <input type="number" id="denInput" placeholder="Den">
     </div>
 
     <div>
@@ -152,18 +154,18 @@
     }
 
     function generateProblem() {
-        // Clear previous
+        // Clear previous inputs and styles
         document.getElementById('numInput').value = '';
         document.getElementById('denInput').value = '';
         document.getElementById('feedback').innerHTML = '';
         document.getElementById('numInput').style.borderColor = '#ccc';
         document.getElementById('denInput').style.borderColor = '#ccc';
 
-        // Generate data
-        let a = randInt(10, 40);
-        let b = randInt(10, 40);
-        let c = randInt(10, 40);
-        let d = randInt(10, 40);
+        // Generate randomized data
+        let a = randInt(10, 45);
+        let b = randInt(10, 45);
+        let c = randInt(10, 45);
+        let d = randInt(10, 45);
 
         let row1 = a + b;
         let row2 = c + d;
@@ -182,10 +184,11 @@
         document.getElementById('col2-total').innerText = col2;
         document.getElementById('grand-total').innerText = grand;
 
-        // Pick a question type
-        let qType = randInt(1, 4);
+        // Pick a question type (1-4 Conditional, 5-8 Standard/Marginal)
+        let qType = randInt(1, 8);
         let qText = "";
 
+        // -- CONDITIONAL PROBABILITY --
         if (qType === 1) {
             qText = "Given that a randomly selected student is a <b>Junior</b>, what is the probability they take Art?";
             correctNum = a;
@@ -195,13 +198,32 @@
             correctNum = d;
             correctDen = col2;
         } else if (qType === 3) {
-            qText = "Find P(Junior | Art Class). <br><small><i>(Hint: What group is your condition?)</i></small>";
+            qText = "Find P(Junior | Art Class). <br><small><i>(Hint: What specific group is your condition?)</i></small>";
             correctNum = a;
             correctDen = col1;
-        } else {
-            qText = "Find P(Theater Class | Senior). <br><small><i>(Hint: What group is your condition?)</i></small>";
+        } else if (qType === 4) {
+            qText = "Find P(Theater Class | Senior). <br><small><i>(Hint: What specific group is your condition?)</i></small>";
             correctNum = d;
             correctDen = row2;
+        } 
+        
+        // -- STANDARD / MARGINAL PROBABILITY --
+        else if (qType === 5) {
+            qText = "What is the probability that a randomly selected student is a <b>Junior</b>? <br><small><i>(Hint: No condition! Out of everyone surveyed...)</i></small>";
+            correctNum = row1;
+            correctDen = grand;
+        } else if (qType === 6) {
+            qText = "Find P(Senior). <br><small><i>(Hint: No condition! Out of everyone surveyed...)</i></small>";
+            correctNum = row2;
+            correctDen = grand;
+        } else if (qType === 7) {
+            qText = "What is the probability that a randomly selected student takes <b>Art Class</b>?";
+            correctNum = col1;
+            correctDen = grand;
+        } else if (qType === 8) {
+            qText = "Find P(Theater Class).";
+            correctNum = col2;
+            correctDen = grand;
         }
 
         document.getElementById('questionText').innerHTML = qText;
@@ -212,20 +234,26 @@
         let userDen = parseInt(document.getElementById('denInput').value);
         let feedback = document.getElementById('feedback');
 
+        if (isNaN(userNum) || isNaN(userDen)) {
+            feedback.innerHTML = "⚠️ Please enter both numbers.";
+            feedback.style.color = "#dc3545";
+            return;
+        }
+
         if (userNum === correctNum && userDen === correctDen) {
-            feedback.innerHTML = "✅ Correct! You isolated the correct group.";
+            feedback.innerHTML = "✅ Correct! You pulled the right total and category.";
             feedback.style.color = "#28a745";
             document.getElementById('numInput').style.borderColor = "#28a745";
             document.getElementById('denInput').style.borderColor = "#28a745";
         } else {
-            feedback.innerHTML = "❌ Try Again. Double check what group you are pulling your total from.";
+            feedback.innerHTML = "❌ Try Again. Double check what group you are pulling your total from!";
             feedback.style.color = "#dc3545";
             document.getElementById('numInput').style.borderColor = "#dc3545";
             document.getElementById('denInput').style.borderColor = "#dc3545";
         }
     }
 
-    // Init
+    // Initialize the first problem
     generateProblem();
 </script>
 

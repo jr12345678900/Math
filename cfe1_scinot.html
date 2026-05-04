@@ -27,9 +27,9 @@
     <h3>Drill: Sci Notation & Rounding</h3>
     <div class="problem-box" id="problemDisplay">Loading...</div>
     
-    <label>1. Scientific Notation <span class="hint">(Write 'a' to 3 sig figs):</span></label>
+    <label>1. Scientific Notation <span class="hint" id="aHintLabel"></span></label>
     <div class="flex-inputs">
-        <input type="number" id="inputA" step="any" placeholder="a (e.g. 4.75)"> 
+        <input type="number" id="inputA" step="any" placeholder="a"> 
         <span> &times; 10^ </span>
         <input type="number" id="inputK" placeholder="k">
     </div>
@@ -48,34 +48,45 @@
     let correctRounded = 0;
 
     function generateProblem() {
-        // Generate a base and exponent (keep exponent moderate so decimal rounding makes sense)
+        // Generate a base and exponent
         let base = (Math.random() * 8.999 + 1); 
         let exp = (Math.random() > 0.5) ? -1 * (Math.floor(Math.random() * 3) + 1) : Math.floor(Math.random() * 3) + 1;
         
-        // Create exact value rounded to 5 sig figs initially to avoid deep floating point errors
-        let exactValue = parseFloat((base * Math.pow(10, exp)).toPrecision(5));
+        // Exact value rounded slightly to avoid deep JS floating point errors
+        let exactValue = parseFloat((base * Math.pow(10, exp)).toPrecision(6));
         
-        // 1. Calculate Sci Not with 'a' to exactly 3 sig figs
-        let sciString = exactValue.toExponential(2); // .toExponential(2) gives 1 digit before decimal, 2 after = 3 sig figs
-        let parts = sciString.split('e');
-        correctA = parseFloat(parts[0]);
-        correctK = parseInt(parts[1].replace('+', ''));
-
-        // 2. Determine Rounding Type (50% chance Decimal Places, 50% chance Sig Figs)
+        // Determine Rounding Type (50% chance Decimal Places, 50% chance Sig Figs)
         let isDecimalPlace = Math.random() > 0.5;
         let targetRounding = 0;
+        let ruleText = "";
 
+        // Calculate Box 2 Answer (Overall Rounded Value)
         if (isDecimalPlace) {
             targetRounding = Math.floor(Math.random() * 3) + 1; // 1 to 3 dp
             correctRounded = parseFloat(exactValue.toFixed(targetRounding));
-            document.getElementById('roundingLabel').innerHTML = `2. Correct to ${targetRounding} decimal place(s):`;
+            ruleText = `${targetRounding} decimal place(s)`;
         } else {
             targetRounding = Math.floor(Math.random() * 2) + 2; // 2 to 3 sf
             correctRounded = parseFloat(exactValue.toPrecision(targetRounding));
-            document.getElementById('roundingLabel').innerHTML = `2. Correct to ${targetRounding} significant figure(s):`;
+            ruleText = `${targetRounding} significant figure(s)`;
         }
 
+        // Calculate Box 1 Answer (Sci Notation where 'a' follows the SAME rule)
+        let sciString = exactValue.toExponential(); 
+        let parts = sciString.split('e');
+        let rawA = parseFloat(parts[0]);
+        correctK = parseInt(parts[1].replace('+', ''));
+
+        if (isDecimalPlace) {
+            correctA = parseFloat(rawA.toFixed(targetRounding));
+        } else {
+            correctA = parseFloat(rawA.toPrecision(targetRounding));
+        }
+
+        // Update UI
         document.getElementById('problemDisplay').innerHTML = `Exact Value: z = ${exactValue}`;
+        document.getElementById('aHintLabel').innerHTML = `(Write 'a' to ${ruleText}):`;
+        document.getElementById('roundingLabel').innerHTML = `2. Correct to ${ruleText}:`;
         
         // Clear inputs
         document.getElementById('inputA').value = ''; 
@@ -97,7 +108,7 @@
             document.getElementById('feedback').innerHTML = "✅ Correct! Great job.";
             document.getElementById('feedback').className = "correct";
         } else {
-            document.getElementById('feedback').innerHTML = "❌ Try Again. Double-check your rules for 3 sig figs and decimal places.";
+            document.getElementById('feedback').innerHTML = "❌ Try Again. Double-check your rounding rules for both boxes.";
             document.getElementById('feedback').className = "incorrect";
         }
     }

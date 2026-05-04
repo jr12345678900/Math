@@ -62,4 +62,47 @@
         correctK = parseInt(parts[1].replace('+', ''));
 
         // 2. Determine Rounding Type (50% chance Decimal Places, 50% chance Sig Figs)
-        let isDecimalPlace
+        let isDecimalPlace = Math.random() > 0.5;
+        let targetRounding = 0;
+
+        if (isDecimalPlace) {
+            targetRounding = Math.floor(Math.random() * 3) + 1; // 1 to 3 dp
+            correctRounded = parseFloat(exactValue.toFixed(targetRounding));
+            document.getElementById('roundingLabel').innerHTML = `2. Correct to ${targetRounding} decimal place(s):`;
+        } else {
+            targetRounding = Math.floor(Math.random() * 2) + 2; // 2 to 3 sf
+            correctRounded = parseFloat(exactValue.toPrecision(targetRounding));
+            document.getElementById('roundingLabel').innerHTML = `2. Correct to ${targetRounding} significant figure(s):`;
+        }
+
+        document.getElementById('problemDisplay').innerHTML = `Exact Value: z = ${exactValue}`;
+        
+        // Clear inputs
+        document.getElementById('inputA').value = ''; 
+        document.getElementById('inputK').value = ''; 
+        document.getElementById('inputRounded').value = '';
+        document.getElementById('feedback').innerHTML = '';
+    }
+
+    function checkAnswer() {
+        let uA = parseFloat(document.getElementById('inputA').value);
+        let uK = parseInt(document.getElementById('inputK').value);
+        let uRounded = parseFloat(document.getElementById('inputRounded').value);
+        
+        let aMatch = Math.abs(uA - correctA) < 0.001;
+        let kMatch = uK === correctK;
+        let roundMatch = Math.abs(uRounded - correctRounded) < 0.0001;
+
+        if (aMatch && kMatch && roundMatch) {
+            document.getElementById('feedback').innerHTML = "✅ Correct! Great job.";
+            document.getElementById('feedback').className = "correct";
+        } else {
+            document.getElementById('feedback').innerHTML = "❌ Try Again. Double-check your rules for 3 sig figs and decimal places.";
+            document.getElementById('feedback').className = "incorrect";
+        }
+    }
+
+    window.onload = generateProblem;
+</script>
+</body>
+</html>

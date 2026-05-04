@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conditional Probability: Venn Diagrams</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; color: #333; display: flex; justify-content: center; padding: 20px; }
+        .container { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 600px; width: 100%; text-align: center; }
+        h3 { color: #00467F; margin-top: 0; }
+        .venn-container { position: relative; width: 300px; height: 200px; margin: 20px auto; }
+        .circle { position: absolute; width: 160px; height: 160px; border-radius: 50%; opacity: 0.5; border: 2px solid #333; top: 20px; display: flex; justify-content: center; align-items: center; font-size: 1.5em; font-weight: bold; }
+        .circle-A { background-color: #ff9999; left: 20px; }
+        .circle-B { background-color: #99ccff; right: 20px; }
+        .label-A { position: absolute; top: 0; left: 40px; font-weight: bold; color: #d9534f; }
+        .label-B { position: absolute; top: 0; right: 40px; font-weight: bold; color: #00467F; }
+        .val-A { position: absolute; top: 90px; left: 60px; font-size: 1.5em; font-weight: bold; }
+        .val-B { position: absolute; top: 90px; right: 60px; font-size: 1.5em; font-weight: bold; }
+        .val-mid { position: absolute; top: 90px; left: 140px; font-size: 1.5em; font-weight: bold; z-index: 10; }
+        .val-out { position: absolute; bottom: 0px; right: 0px; font-size: 1.2em; font-weight: bold; }
+        .question-box { background-color: #e8f4f8; padding: 15px; border-radius: 6px; margin-bottom: 20px; font-size: 1.1em; }
+        .input-group { display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 1.2em; margin-bottom: 20px; }
+        input[type="number"] { width: 70px; padding: 8px; font-size: 1em; border: 2px solid #ccc; border-radius: 4px; text-align: center; }
+        .fraction-line { font-size: 1.5em; color: #555; }
+        button { padding: 10px 20px; font-size: 1em; cursor: pointer; border: none; border-radius: 5px; font-weight: bold; transition: 0.2s; }
+        .btn-check { background-color: #28a745; color: white; }
+        .btn-new { background-color: #00467F; color: white; margin-left: 10px; }
+        #feedback { margin-top: 15px; font-weight: bold; font-size: 1.1em; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3>Skill Practice: Venn Diagrams & Conditions</h3>
+    <p>Use the "Cover Up" method. If a group is the "Given" condition, ignore everything outside of that circle!</p>
+    
+    <div class="venn-container">
+        <div class="label-A">Art (A)</div>
+        <div class="label-B">Band (B)</div>
+        <div class="circle circle-A"></div>
+        <div class="circle circle-B"></div>
+        <div class="val-A" id="valA"></div>
+        <div class="val-mid" id="valMid"></div>
+        <div class="val-B" id="valB"></div>
+        <div class="val-out" id="valOut"></div>
+    </div>
+
+    <div class="question-box" id="questionText"></div>
+
+    <div class="input-group">
+        P = 
+        <input type="number" id="numInput" placeholder="Num">
+        <span class="fraction-line">/</span>
+        <input type="number" id="denInput" placeholder="Den">
+    </div>
+
+    <div>
+        <button class="btn-check" onclick="checkAnswer()">Check Answer</button>
+        <button class="btn-new" onclick="generateProblem()">New Problem</button>
+    </div>
+    <div id="feedback"></div>
+</div>
+
+<script>
+    let correctNum = 0; let correctDen = 0;
+
+    function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+    function generateProblem() {
+        document.getElementById('numInput').value = '';
+        document.getElementById('denInput').value = '';
+        document.getElementById('feedback').innerHTML = '';
+        
+        let aOnly = randInt(5, 25);
+        let bOnly = randInt(5, 25);
+        let mid = randInt(2, 15);
+        let out = randInt(2, 10);
+        let totalA = aOnly + mid;
+        let totalB = bOnly + mid;
+
+        document.getElementById('valA').innerText = aOnly;
+        document.getElementById('valMid').innerText = mid;
+        document.getElementById('valB').innerText = bOnly;
+        document.getElementById('valOut').innerText = out;
+
+        let qType = randInt(1, 4);
+        let qText = "";
+
+        if (qType === 1) {
+            qText = "Given that a student is in <b>Band</b>, what is the probability they are also in Art?<br><b>Find P(Art | Band)</b>";
+            correctNum = mid; correctDen = totalB;
+        } else if (qType === 2) {
+            qText = "If you select a student from the <b>Art</b> circle, what is the probability they are in Band?<br><b>Find P(Band | Art)</b>";
+            correctNum = mid; correctDen = totalA;
+        } else if (qType === 3) {
+            qText = "What is the probability that a student is in Band, <i>given that</i> they are in Art?<br><b>Find P(Band | Art)</b>";
+            correctNum = mid; correctDen = totalA;
+        } else {
+            qText = "Find <b>P(Art | Band)</b>.<br><small>Hint: What is the denominator/condition?</small>";
+            correctNum = mid; correctDen = totalB;
+        }
+        document.getElementById('questionText').innerHTML = qText;
+    }
+
+    function checkAnswer() {
+        let num = parseInt(document.getElementById('numInput').value);
+        let den = parseInt(document.getElementById('denInput').value);
+        let fb = document.getElementById('feedback');
+
+        if (num === correctNum && den === correctDen) {
+            fb.innerHTML = "✅ Correct! You shrunk the denominator perfectly."; fb.style.color = "#28a745";
+        } else {
+            fb.innerHTML = "❌ Try Again. Check your total for the 'Given' circle."; fb.style.color = "#dc3545";
+        }
+    }
+    generateProblem();
+</script>
+</body>
+</html>

@@ -9,28 +9,28 @@
         .container { background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 600px; width: 100%; text-align: center; border-top: 5px solid #00467F; }
         .problem-text { font-size: 1.4em; margin-bottom: 20px; padding: 15px; background: #e8f4f8; border-radius: 8px; font-style: italic; }
         .input-group { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 20px; font-size: 1.2em; flex-wrap: wrap; }
-        input[type="number"] { width: 60px; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em; text-align: center; }
+        input[type="text"] { width: 60px; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em; text-align: center; outline: none; transition: background-color 0.3s; }
         button { background-color: #00467F; color: white; border: none; padding: 10px 20px; font-size: 1.1em; border-radius: 5px; cursor: pointer; transition: 0.2s; margin: 5px; }
         button:hover { background-color: #003057; }
-        .feedback { margin-top: 15px; font-size: 1.2em; font-weight: bold; min-height: 30px; }
-        .correct { color: #28a745; }
-        .incorrect { color: #dc3545; }
+        .feedback { margin-top: 15px; font-size: 1.1em; font-weight: bold; min-height: 30px; }
+        .correct-bg { background-color: #d4edda !important; border-color: #c3e6cb !important; }
+        .incorrect-bg { background-color: #f8d7da !important; border-color: #f5c6cb !important; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h2 style="margin-top:0; color:#00467F;">Synthetic Division Drill</h2>
-    <p>Divide the following polynomials. Enter the coefficients of the quotient and the remainder.</p>
+    <p>Divide the polynomials. <em>(Watch out for missing terms!)</em> Enter the coefficients of the quotient and the remainder.</p>
     
     <div class="problem-text" id="problemDisplay">Loading...</div>
     
     <div class="input-group">
-        <input type="number" id="q2" placeholder="x²"> x² + 
-        <input type="number" id="q1" placeholder="x"> x + 
-        <input type="number" id="q0" placeholder="C"> 
-        <span style="margin-left: 15px;">R:</span>
-        <input type="number" id="rem" placeholder="Rem">
+        <input type="text" id="q2" placeholder="x²"> x² + 
+        <input type="text" id="q1" placeholder="x"> x + 
+        <input type="text" id="q0" placeholder="C"> 
+        <span style="margin-left: 15px; font-weight:bold;">R:</span>
+        <input type="text" id="rem" placeholder="Rem">
     </div>
 
     <button onclick="checkAnswer()">Check Answer</button>
@@ -55,32 +55,42 @@
         return term;
     }
 
-    function generateProblem() {
-        // Clear inputs
-        document.getElementById('q2').value = '';
-        document.getElementById('q1').value = '';
-        document.getElementById('q0').value = '';
-        document.getElementById('rem').value = '';
+    function resetInputs() {
+        let inputs = ['q2', 'q1', 'q0', 'rem'];
+        inputs.forEach(id => {
+            let el = document.getElementById(id);
+            el.value = '';
+            el.classList.remove('correct-bg', 'incorrect-bg');
+        });
         document.getElementById('feedbackMsg').textContent = '';
+    }
 
-        // Generate Divisor root (x - a) -> root is 'a'
-        let a = Math.floor(Math.random() * 9) - 4; // -4 to 4
-        if (a === 0) a = 2; 
+    function generateProblem() {
+        resetInputs();
 
-        // Generate Quotient coefficients and Remainder
-        let q2 = Math.floor(Math.random() * 5) + 1; // 1 to 5 (keep positive for simplicity)
-        if (Math.random() > 0.5) q2 *= -1;
-        let q1 = Math.floor(Math.random() * 11) - 5;
-        let q0 = Math.floor(Math.random() * 11) - 5;
-        let r = Math.floor(Math.random() * 21) - 10;
+        // High probability of generating 0 for c2 or c1 to force placeholders
+        let c3 = Math.floor(Math.random() * 4) + 1; 
+        if (Math.random() > 0.5) c3 *= -1; // random positive/negative leading coef
+        
+        let c2 = Math.floor(Math.random() * 9) - 4;
+        if (Math.random() < 0.4) c2 = 0; // 40% chance of missing x^2 term
+        
+        let c1 = Math.floor(Math.random() * 9) - 4;
+        if (c2 !== 0 && Math.random() < 0.4) c1 = 0; // 40% chance of missing x term (if c2 isn't already 0)
+
+        let c0 = Math.floor(Math.random() * 21) - 10;
+
+        // Generate divisor (x - a)
+        let a = Math.floor(Math.random() * 9) - 4;
+        if (a === 0) a = 2;
+
+        // Calculate actual quotient and remainder using synthetic division logic
+        let q2 = c3;
+        let q1 = c2 + a * q2;
+        let q0 = c1 + a * q1;
+        let r = c0 + a * q0;
 
         currentAns = { q2, q1, q0, r };
-
-        // Calculate Dividend coefficients: P(x) = (x-a)(q2*x^2 + q1*x + q0) + r
-        let c3 = q2;
-        let c2 = q1 - a * q2;
-        let c1 = q0 - a * q1;
-        let c0 = r - a * q0;
 
         let dividendStr = formatTerm(c3, 3, true) + formatTerm(c2, 2, false) + formatTerm(c1, 1, false) + formatTerm(c0, 0, false);
         let divisorStr = formatTerm(1, 1, true) + formatTerm(-a, 0, false);
@@ -88,26 +98,35 @@
         document.getElementById('problemDisplay').innerHTML = `(${dividendStr}) &divide; (${divisorStr})`;
     }
 
+    function checkField(id, correctVal) {
+        let el = document.getElementById(id);
+        let userVal = parseInt(el.value);
+        el.classList.remove('correct-bg', 'incorrect-bg');
+        
+        if (isNaN(userVal)) {
+            el.classList.add('incorrect-bg');
+            return false;
+        } else if (userVal === correctVal) {
+            el.classList.add('correct-bg');
+            return true;
+        } else {
+            el.classList.add('incorrect-bg');
+            return false;
+        }
+    }
+
     function checkAnswer() {
-        let uQ2 = parseInt(document.getElementById('q2').value);
-        let uQ1 = parseInt(document.getElementById('q1').value);
-        let uQ0 = parseInt(document.getElementById('q0').value);
-        let uR = parseInt(document.getElementById('rem').value);
+        let isQ2 = checkField('q2', currentAns.q2);
+        let isQ1 = checkField('q1', currentAns.q1);
+        let isQ0 = checkField('q0', currentAns.q0);
+        let isR = checkField('rem', currentAns.r);
 
         let fb = document.getElementById('feedbackMsg');
         
-        if (isNaN(uQ2) || isNaN(uQ1) || isNaN(uQ0) || isNaN(uR)) {
-            fb.textContent = "Please fill in all boxes.";
-            fb.className = "feedback incorrect";
-            return;
-        }
-
-        if (uQ2 === currentAns.q2 && uQ1 === currentAns.q1 && uQ0 === currentAns.q0 && uR === currentAns.r) {
-            fb.textContent = "✅ Correct! Great job.";
-            fb.className = "feedback correct";
+        if (isQ2 && isQ1 && isQ0 && isR) {
+            fb.innerHTML = "<span style='color: #28a745;'>✅ All parts correct! Outstanding.</span>";
         } else {
-            fb.textContent = "❌ Not quite. Check your synthetic division steps.";
-            fb.className = "feedback incorrect";
+            fb.innerHTML = "<span style='color: #dc3545;'>❌ Some parts are incorrect. Check the red boxes and try again.</span>";
         }
     }
 

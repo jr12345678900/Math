@@ -5,19 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Polynomial Features Practice</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f8; color: #333; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .container { background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 650px; width: 100%; border-top: 5px solid #00467F; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f8; color: #333; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box;}
+        .container { background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 750px; width: 100%; border-top: 5px solid #00467F; }
         .problem-text { font-size: 1.5em; margin-bottom: 20px; padding: 15px; background: #fff3cd; border-radius: 8px; text-align: center; letter-spacing: 1px; }
         .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .section-title { grid-column: span 2; margin-top: 10px; margin-bottom: 5px; color: #00467F; border-bottom: 1px solid #ccc; padding-bottom: 5px; font-size: 1.1em;}
         .input-group { display: flex; flex-direction: column; }
         label { font-weight: bold; margin-bottom: 5px; font-size: 0.9em; color: #555; }
-        select, input[type="text"] { padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em; }
+        select, input[type="text"] { padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em; outline: none; transition: background-color 0.3s; }
         .button-row { text-align: center; margin-top: 20px; }
         button { background-color: #00467F; color: white; border: none; padding: 10px 20px; font-size: 1.1em; border-radius: 5px; cursor: pointer; transition: 0.2s; margin: 5px; }
         button:hover { background-color: #003057; }
-        .feedback { margin-top: 15px; font-size: 1.2em; font-weight: bold; text-align: center; min-height: 30px; }
-        .correct { color: #28a745; }
-        .incorrect { color: #dc3545; }
+        .feedback { margin-top: 15px; font-size: 1.1em; font-weight: bold; text-align: center; min-height: 30px; }
+        .correct-bg { background-color: #d4edda !important; border-color: #c3e6cb !important; }
+        .incorrect-bg { background-color: #f8d7da !important; border-color: #f5c6cb !important; }
     </style>
 </head>
 <body>
@@ -29,6 +30,7 @@
     <div class="problem-text" id="problemDisplay">Loading...</div>
     
     <div class="grid-container">
+        <h3 class="section-title">Global Features</h3>
         <div class="input-group">
             <label>Degree is:</label>
             <select id="degree">
@@ -49,21 +51,43 @@
             <label>As x &rarr; &infin;, y &rarr; :</label>
             <select id="rightEnd">
                 <option value="">--Select--</option>
-                <option value="inf">+&infin;</option>
-                <option value="ninf">-&infin;</option>
+                <option value="inf">+&infin; (Up)</option>
+                <option value="ninf">-&infin; (Down)</option>
             </select>
         </div>
         <div class="input-group">
             <label>As x &rarr; -&infin;, y &rarr; :</label>
             <select id="leftEnd">
                 <option value="">--Select--</option>
-                <option value="inf">+&infin;</option>
-                <option value="ninf">-&infin;</option>
+                <option value="inf">+&infin; (Up)</option>
+                <option value="ninf">-&infin; (Down)</option>
             </select>
         </div>
-        <div class="input-group" style="grid-column: span 2;">
-            <label>List all x-intercepts (comma separated):</label>
-            <input type="text" id="roots" placeholder="e.g. 2, -3">
+
+        <h3 class="section-title">Local Behavior (Roots)</h3>
+        <div class="input-group">
+            <label>Smaller x-intercept (number):</label>
+            <input type="text" id="root1" placeholder="e.g. -3">
+        </div>
+        <div class="input-group">
+            <label>Behavior at smaller root:</label>
+            <select id="beh1">
+                <option value="">--Select--</option>
+                <option value="cross">Crosses x-axis</option>
+                <option value="bounce">Bounces (Touches)</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label>Larger x-intercept (number):</label>
+            <input type="text" id="root2" placeholder="e.g. 4">
+        </div>
+        <div class="input-group">
+            <label>Behavior at larger root:</label>
+            <select id="beh2">
+                <option value="">--Select--</option>
+                <option value="cross">Crosses x-axis</option>
+                <option value="bounce">Bounces (Touches)</option>
+            </select>
         </div>
     </div>
 
@@ -78,21 +102,31 @@
 <script>
     let currentAns = {};
 
-    function generateProblem() {
-        document.getElementById('degree').value = '';
-        document.getElementById('lc').value = '';
-        document.getElementById('rightEnd').value = '';
-        document.getElementById('leftEnd').value = '';
-        document.getElementById('roots').value = '';
+    function resetInputs() {
+        let inputs = ['degree', 'lc', 'rightEnd', 'leftEnd', 'root1', 'beh1', 'root2', 'beh2'];
+        inputs.forEach(id => {
+            let el = document.getElementById(id);
+            el.value = '';
+            el.classList.remove('correct-bg', 'incorrect-bg');
+        });
         document.getElementById('feedbackMsg').textContent = '';
+    }
+
+    function generateProblem() {
+        resetInputs();
 
         let lcSign = Math.random() > 0.5 ? 1 : -1;
         let aStr = lcSign === 1 ? "" : "-";
 
-        let r1 = Math.floor(Math.random() * 9) - 4; // -4 to 4
-        let r2;
-        do { r2 = Math.floor(Math.random() * 9) - 4; } while (r2 === r1);
+        // Generate roots ensuring r1 is smaller than r2
+        let temp1 = Math.floor(Math.random() * 9) - 4; 
+        let temp2;
+        do { temp2 = Math.floor(Math.random() * 9) - 4; } while (temp2 === temp1);
+        
+        let r1 = Math.min(temp1, temp2);
+        let r2 = Math.max(temp1, temp2);
 
+        // Generate multiplicities
         let m1 = Math.floor(Math.random() * 2) + 1; // 1 or 2
         let m2 = Math.floor(Math.random() * 2) + 1;
         
@@ -104,41 +138,61 @@
             lc: lcSign === 1 ? "pos" : "neg",
             rEnd: lcSign === 1 ? "inf" : "ninf",
             lEnd: (lcSign === 1 && isEven) || (lcSign === -1 && !isEven) ? "inf" : "ninf",
-            roots: [r1, r2].sort((a,b)=>a-b)
+            root1: r1,
+            beh1: (m1 % 2 === 0) ? "bounce" : "cross",
+            root2: r2,
+            beh2: (m2 % 2 === 0) ? "bounce" : "cross"
         };
 
         let factor1 = `(x ${r1 < 0 ? '+' : '-'} ${Math.abs(r1)})` + (m1 > 1 ? `<sup>${m1}</sup>` : '');
         let factor2 = `(x ${r2 < 0 ? '+' : '-'} ${Math.abs(r2)})` + (m2 > 1 ? `<sup>${m2}</sup>` : '');
 
-        document.getElementById('problemDisplay').innerHTML = `f(x) = ${aStr}${factor1}${factor2}`;
+        // Randomize order of factors displayed
+        let displayFactors = Math.random() > 0.5 ? factor1 + factor2 : factor2 + factor1;
+
+        document.getElementById('problemDisplay').innerHTML = `f(x) = ${aStr}${displayFactors}`;
+    }
+
+    function checkField(id, correctVal, isNumber = false) {
+        let el = document.getElementById(id);
+        let userVal = isNumber ? parseInt(el.value) : el.value;
+        el.classList.remove('correct-bg', 'incorrect-bg');
+        
+        if (userVal === "" || (isNumber && isNaN(userVal))) {
+            el.classList.add('incorrect-bg');
+            return false;
+        } else if (userVal === correctVal) {
+            el.classList.add('correct-bg');
+            return true;
+        } else {
+            el.classList.add('incorrect-bg');
+            return false;
+        }
     }
 
     function checkAnswer() {
-        let uDeg = document.getElementById('degree').value;
-        let uLc = document.getElementById('lc').value;
-        let uREnd = document.getElementById('rightEnd').value;
-        let uLEnd = document.getElementById('leftEnd').value;
-        let uRoots = document.getElementById('roots').value.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n)).sort((a,b)=>a-b);
+        let allCorrect = true;
+        
+        if (!checkField('degree', currentAns.deg)) allCorrect = false;
+        if (!checkField('lc', currentAns.lc)) allCorrect = false;
+        if (!checkField('rightEnd', currentAns.rEnd)) allCorrect = false;
+        if (!checkField('leftEnd', currentAns.lEnd)) allCorrect = false;
+        
+        if (!checkField('root1', currentAns.root1, true)) allCorrect = false;
+        if (!checkField('beh1', currentAns.beh1)) allCorrect = false;
+        if (!checkField('root2', currentAns.root2, true)) allCorrect = false;
+        if (!checkField('beh2', currentAns.beh2)) allCorrect = false;
 
         let fb = document.getElementById('feedbackMsg');
 
-        if (!uDeg || !uLc || !uREnd || !uLEnd || uRoots.length === 0) {
-            fb.textContent = "Please complete all fields.";
-            fb.className = "feedback incorrect";
-            return;
-        }
-
-        let rootsCorrect = JSON.stringify(uRoots) === JSON.stringify(currentAns.roots);
-
-        if (uDeg === currentAns.deg && uLc === currentAns.lc && uREnd === currentAns.rEnd && uLEnd === currentAns.lEnd && rootsCorrect) {
-            fb.textContent = "✅ Correct! Excellent analysis.";
-            fb.className = "feedback correct";
+        if (allCorrect) {
+            fb.innerHTML = "<span style='color: #28a745;'>✅ All parts correct! Excellent analysis.</span>";
         } else {
-            fb.textContent = "❌ Something is off. Check your degree parity and sign limits.";
-            fb.className = "feedback incorrect";
+            fb.innerHTML = "<span style='color: #dc3545;'>❌ Look at the red boxes to see where you made a mistake.</span>";
         }
     }
 
+    // Init
     generateProblem();
 </script>
 </body>

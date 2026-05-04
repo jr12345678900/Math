@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Single Value Bounds Drill</title>
+<style>
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f7f6; padding: 20px; color: #333; }
+    .container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
+    h3 { color: #16a085; margin-top: 0; }
+    .problem-box { font-size: 1.1em; margin-bottom: 15px; padding: 15px; background: #e8f8f5; border-radius: 5px; }
+    label { font-weight: bold; display: block; margin-top: 10px; }
+    input { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    button { background: #2980b9; color: white; border: none; padding: 10px; margin-top: 15px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 1em; }
+    button:hover { background: #3498db; }
+    .btn-new { background: #27ae60; }
+    .btn-new:hover { background: #2ecc71; }
+    #feedback { margin-top: 15px; font-weight: bold; text-align: center; }
+    .correct { color: #27ae60; }
+    .incorrect { color: #c0392b; }
+</style>
+</head>
+<body>
+<div class="container">
+    <h3>Drill: Upper & Lower Bounds</h3>
+    <div class="problem-box" id="problemDisplay">Loading...</div>
+    <label>Lower Bound:</label>
+    <input type="number" id="inputLower" step="any" placeholder="Enter minimum possible value">
+    <label>Upper Bound:</label>
+    <input type="number" id="inputUpper" step="any" placeholder="Enter maximum possible value">
+    <button onclick="checkAnswer()">Check Answer</button>
+    <button class="btn-new" onclick="generateProblem()">New Problem</button>
+    <div id="feedback"></div>
+</div>
+<script>
+    let correctLower=0, correctUpper=0;
+    function generateProblem() {
+        let accuracyTypes = [
+            { text: "nearest whole number", unit: 1, dec: 0 },
+            { text: "nearest 10", unit: 10, dec: 0 },
+            { text: "1 decimal place", unit: 0.1, dec: 1 }
+        ];
+        let acc = accuracyTypes[Math.floor(Math.random() * accuracyTypes.length)];
+        let val = (Math.floor(Math.random() * 50) + 10) * acc.unit;
+        if(acc.dec > 0) val = parseFloat(val.toFixed(acc.dec));
+        
+        let halfUnit = acc.unit / 2;
+        correctLower = val - halfUnit;
+        correctUpper = val + halfUnit;
+
+        document.getElementById('problemDisplay').innerHTML = `A measurement is given as <strong>${val}</strong>, rounded to the <strong>${acc.text}</strong>.<br><br>Find the lower and upper bounds of this measurement.`;
+        document.getElementById('inputLower').value = ''; document.getElementById('inputUpper').value = '';
+        document.getElementById('feedback').innerHTML = '';
+    }
+    function checkAnswer() {
+        let uL = parseFloat(document.getElementById('inputLower').value);
+        let uU = parseFloat(document.getElementById('inputUpper').value);
+        if(Math.abs(uL - correctLower) < 0.001 && Math.abs(uU - correctUpper) < 0.001) {
+            document.getElementById('feedback').innerHTML = "✅ Correct! Great job.";
+            document.getElementById('feedback').className = "correct";
+        } else {
+            document.getElementById('feedback').innerHTML = "❌ Try Again. Remember to add/subtract half the unit of accuracy.";
+            document.getElementById('feedback').className = "incorrect";
+        }
+    }
+    window.onload = generateProblem;
+</script>
+</body>
+</html>

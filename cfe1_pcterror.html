@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Percentage Error & Bound Calculations Drill</title>
+<style>
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f7f6; padding: 20px; color: #333; }
+    .container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
+    h3 { color: #8e44ad; margin-top: 0; }
+    .problem-box { font-size: 1.1em; margin-bottom: 15px; padding: 15px; background: #f5eef8; border-radius: 5px; }
+    label { font-weight: bold; display: block; margin-top: 10px; }
+    input { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    button { background: #2980b9; color: white; border: none; padding: 10px; margin-top: 15px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 1em; }
+    button:hover { background: #3498db; }
+    .btn-new { background: #27ae60; }
+    .btn-new:hover { background: #2ecc71; }
+    #feedback { margin-top: 15px; font-weight: bold; text-align: center; }
+    .correct { color: #27ae60; }
+    .incorrect { color: #c0392b; }
+</style>
+</head>
+<body>
+<div class="container">
+    <h3>Drill: Percentage Error</h3>
+    <div class="problem-box" id="problemDisplay">Loading...</div>
+    <label>Percentage Error (%):</label>
+    <input type="number" id="inputError" step="any" placeholder="Enter error percentage">
+    <button onclick="checkAnswer()">Check Answer</button>
+    <button class="btn-new" onclick="generateProblem()">New Problem</button>
+    <div id="feedback"></div>
+</div>
+<script>
+    let correctError = 0;
+    function generateProblem() {
+        let exact = Math.floor(Math.random() * 5000) + 500;
+        let margin = exact * ((Math.random() * 0.14) + 0.01); 
+        let approx = Math.round(Math.random() > 0.5 ? exact + margin : exact - margin);
+        correctError = Math.abs((approx - exact) / exact) * 100;
+        document.getElementById('problemDisplay').innerHTML = `A student measures a distance to be <strong>${approx} km</strong>.<br><br>The exact distance is known to be <strong>${exact} km</strong>.<br><br>Calculate the percentage error (to 2 decimal places).`;
+        document.getElementById('inputError').value = '';
+        document.getElementById('feedback').innerHTML = '';
+    }
+    function checkAnswer() {
+        let uE = parseFloat(document.getElementById('inputError').value);
+        if(Math.abs(uE - correctError) < 0.05 || Math.abs(uE - Math.round(correctError*100)/100) < 0.05) {
+            document.getElementById('feedback').innerHTML = `✅ Correct! (${correctError.toFixed(2)}%)`;
+            document.getElementById('feedback').className = "correct";
+        } else {
+            document.getElementById('feedback').innerHTML = `❌ Try Again. Formula: |(Approx - Exact) / Exact| &times; 100`;
+            document.getElementById('feedback').className = "incorrect";
+        }
+    }
+    window.onload = generateProblem;
+</script>
+</body>
+</html>

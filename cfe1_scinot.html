@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Scientific Notation & Sig Figs Drill</title>
+<style>
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f7f6; padding: 20px; color: #333; }
+    .container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
+    h3 { color: #d35400; margin-top: 0; }
+    .problem-box { font-size: 1.2em; font-weight: bold; margin-bottom: 15px; padding: 10px; background: #e8f4f8; border-radius: 5px; text-align: center; }
+    label { font-weight: bold; display: block; margin-top: 10px; }
+    input { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    .flex-inputs { display: flex; align-items: center; gap: 10px; }
+    .flex-inputs input { width: 40%; }
+    button { background: #2980b9; color: white; border: none; padding: 10px; margin-top: 15px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 1em; }
+    button:hover { background: #3498db; }
+    .btn-new { background: #27ae60; }
+    .btn-new:hover { background: #2ecc71; }
+    #feedback { margin-top: 15px; font-weight: bold; text-align: center; }
+    .correct { color: #27ae60; }
+    .incorrect { color: #c0392b; }
+</style>
+</head>
+<body>
+<div class="container">
+    <h3>Drill: Sci Notation & Sig Figs</h3>
+    <div class="problem-box" id="problemDisplay">Loading...</div>
+    <label>1. Scientific Notation (a x 10^k):</label>
+    <div class="flex-inputs">
+        <input type="number" id="inputA" step="any" placeholder="a (e.g. 1.475)"> 
+        <span> &times; 10^ </span>
+        <input type="number" id="inputK" placeholder="k">
+    </div>
+    <label id="sigFigLabel">2. Round to X significant figures:</label>
+    <input type="number" id="inputSigFig" step="any" placeholder="Rounded value">
+    <button onclick="checkAnswer()">Check Answer</button>
+    <button class="btn-new" onclick="generateProblem()">New Problem</button>
+    <div id="feedback"></div>
+</div>
+<script>
+    let correctA=0, correctK=0, correctRounded=0, targetSigFigs=0;
+    function generateProblem() {
+        let base = (Math.random() * 8.9 + 1);
+        let exp = Math.random() > 0.5 ? Math.floor(Math.random() * -4) - 1 : Math.floor(Math.random() * 4) + 2;
+        let num = parseFloat((base * Math.pow(10, exp)).toPrecision(5));
+        correctA = parseFloat(num.toExponential().split('e')[0]);
+        correctK = parseInt(num.toExponential().split('e')[1]);
+        targetSigFigs = Math.floor(Math.random() * 2) + 2;
+        correctRounded = Number.parseFloat(num).toPrecision(targetSigFigs);
+        document.getElementById('problemDisplay').innerHTML = `Exact Value: z = ${num}`;
+        document.getElementById('sigFigLabel').innerHTML = `2. Correct to ${targetSigFigs} significant figures:`;
+        document.getElementById('inputA').value = ''; document.getElementById('inputK').value = ''; document.getElementById('inputSigFig').value = '';
+        document.getElementById('feedback').innerHTML = '';
+    }
+    function checkAnswer() {
+        let uA = parseFloat(document.getElementById('inputA').value);
+        let uK = parseInt(document.getElementById('inputK').value);
+        let uSig = document.getElementById('inputSigFig').value;
+        if(Math.abs(uA - correctA)<0.001 && uK === correctK && parseFloat(uSig) === parseFloat(correctRounded)) {
+            document.getElementById('feedback').innerHTML = "✅ Correct!";
+            document.getElementById('feedback').className = "correct";
+        } else {
+            document.getElementById('feedback').innerHTML = "❌ Try Again. Check placement and rounding.";
+            document.getElementById('feedback').className = "incorrect";
+        }
+    }
+    window.onload = generateProblem;
+</script>
+</body>
+</html>

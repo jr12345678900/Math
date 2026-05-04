@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Single Value Bounds Drill</title>
+<title>Dimension and Area Bounds Drill</title>
 <style>
     body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f7f6; padding: 20px; color: #333; }
     .container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
@@ -10,6 +10,7 @@
     .problem-box { font-size: 1.1em; margin-bottom: 15px; padding: 15px; background: #e8f8f5; border-radius: 5px; }
     label { font-weight: bold; display: block; margin-top: 10px; }
     input { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    .flex-inputs { display: flex; gap: 10px; }
     button { background: #2980b9; color: white; border: none; padding: 10px; margin-top: 15px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 1em; }
     button:hover { background: #3498db; }
     .btn-new { background: #27ae60; }
@@ -21,44 +22,58 @@
 </head>
 <body>
 <div class="container">
-    <h3>Drill: Upper & Lower Bounds</h3>
+    <h3>Drill: Dimension & Area Bounds</h3>
     <div class="problem-box" id="problemDisplay">Loading...</div>
-    <label>Lower Bound:</label>
-    <input type="number" id="inputLower" step="any" placeholder="Enter minimum possible value">
-    <label>Upper Bound:</label>
-    <input type="number" id="inputUpper" step="any" placeholder="Enter maximum possible value">
+    
+    <label>1. Bounds for the Length:</label>
+    <div class="flex-inputs">
+        <input type="number" id="inputLowerL" step="any" placeholder="Lower Bound">
+        <input type="number" id="inputUpperL" step="any" placeholder="Upper Bound">
+    </div>
+    
+    <label id="areaLabel">2. Calculate Area Bound:</label>
+    <input type="number" id="inputArea" step="any" placeholder="Area Bound">
+
     <button onclick="checkAnswer()">Check Answer</button>
     <button class="btn-new" onclick="generateProblem()">New Problem</button>
     <div id="feedback"></div>
 </div>
 <script>
-    let correctLower=0, correctUpper=0;
+    let correctLowerL=0, correctUpperL=0, correctArea=0;
     function generateProblem() {
-        let accuracyTypes = [
-            { text: "nearest whole number", unit: 1, dec: 0 },
-            { text: "nearest 10", unit: 10, dec: 0 },
-            { text: "1 decimal place", unit: 0.1, dec: 1 }
-        ];
-        let acc = accuracyTypes[Math.floor(Math.random() * accuracyTypes.length)];
-        let val = (Math.floor(Math.random() * 50) + 10) * acc.unit;
-        if(acc.dec > 0) val = parseFloat(val.toFixed(acc.dec));
+        let length = Math.floor(Math.random() * 20) + 10;
+        let width = Math.floor(Math.random() * 20) + 10;
+        let isMax = Math.random() > 0.5; // Ask for max area or min area
         
-        let halfUnit = acc.unit / 2;
-        correctLower = val - halfUnit;
-        correctUpper = val + halfUnit;
+        let halfUnit = 0.5; // Nearest whole number (unit=1)
+        
+        correctLowerL = length - halfUnit;
+        correctUpperL = length + halfUnit;
+        
+        if (isMax) {
+            correctArea = (length + halfUnit) * (width + halfUnit);
+            document.getElementById('areaLabel').innerHTML = `2. Calculate the <strong>MAXIMUM</strong> possible area:`;
+        } else {
+            correctArea = (length - halfUnit) * (width - halfUnit);
+            document.getElementById('areaLabel').innerHTML = `2. Calculate the <strong>MINIMUM</strong> possible area:`;
+        }
 
-        document.getElementById('problemDisplay').innerHTML = `A measurement is given as <strong>${val}</strong>, rounded to the <strong>${acc.text}</strong>.<br><br>Find the lower and upper bounds of this measurement.`;
-        document.getElementById('inputLower').value = ''; document.getElementById('inputUpper').value = '';
+        document.getElementById('problemDisplay').innerHTML = `A rectangle has Length = <strong>${length} m</strong> and Width = <strong>${width} m</strong>, both measured to the nearest <strong>1 m</strong>.`;
+        document.getElementById('inputLowerL').value = ''; 
+        document.getElementById('inputUpperL').value = '';
+        document.getElementById('inputArea').value = '';
         document.getElementById('feedback').innerHTML = '';
     }
     function checkAnswer() {
-        let uL = parseFloat(document.getElementById('inputLower').value);
-        let uU = parseFloat(document.getElementById('inputUpper').value);
-        if(Math.abs(uL - correctLower) < 0.001 && Math.abs(uU - correctUpper) < 0.001) {
-            document.getElementById('feedback').innerHTML = "✅ Correct! Great job.";
+        let uLL = parseFloat(document.getElementById('inputLowerL').value);
+        let uUL = parseFloat(document.getElementById('inputUpperL').value);
+        let uA = parseFloat(document.getElementById('inputArea').value);
+        
+        if(Math.abs(uLL - correctLowerL) < 0.001 && Math.abs(uUL - correctUpperL) < 0.001 && Math.abs(uA - correctArea) < 0.001) {
+            document.getElementById('feedback').innerHTML = "✅ Correct! Great synthesis.";
             document.getElementById('feedback').className = "correct";
         } else {
-            document.getElementById('feedback').innerHTML = "❌ Try Again. Remember to add/subtract half the unit of accuracy.";
+            document.getElementById('feedback').innerHTML = "❌ Try Again. Remember bounds use +/- 0.5 here.";
             document.getElementById('feedback').className = "incorrect";
         }
     }

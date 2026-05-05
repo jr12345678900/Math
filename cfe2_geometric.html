@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Geometric Sequences Drill</title>
+<style>
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f7f6; padding: 20px; color: #333; }
+    .container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
+    h3 { color: #8e44ad; margin-top: 0; }
+    .problem-box { font-size: 1.1em; margin-bottom: 15px; padding: 15px; background: #f5eef8; border-radius: 5px; line-height: 1.5; }
+    label { font-weight: bold; display: block; margin-top: 10px; }
+    input { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    button { background: #2980b9; color: white; border: none; padding: 10px; margin-top: 15px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 1em; }
+    button:hover { background: #3498db; }
+    .btn-new { background: #27ae60; }
+    .btn-new:hover { background: #2ecc71; }
+    #feedback { margin-top: 15px; font-weight: bold; text-align: center; }
+    .correct { color: #27ae60; }
+    .incorrect { color: #c0392b; }
+    .hint { font-size: 0.85em; color: #7f8c8d; font-weight: normal; }
+</style>
+</head>
+<body>
+<div class="container">
+    <h3>Drill: Geometric Sequences & Series</h3>
+    <div class="problem-box" id="problemDisplay">Loading...</div>
+    
+    <label>1. Find the value of u<sub>n</sub> <span class="hint" id="hintUn"></span>:</label>
+    <input type="number" id="inputUn" step="any" placeholder="Enter term value">
+    
+    <label>2. Find the sum S<sub>n</sub> <span class="hint" id="hintSn"></span>:</label>
+    <input type="number" id="inputSn" step="any" placeholder="Enter total sum">
+    
+    <button onclick="checkAnswer()">Check Answer</button>
+    <button class="btn-new" onclick="generateProblem()">New Problem</button>
+    <div id="feedback"></div>
+</div>
+<script>
+    let correctUn = 0;
+    let correctSn = 0;
+    let dpTarget = 0;
+
+    function generateProblem() {
+        let u1 = Math.floor(Math.random() * 40) + 10;
+        let rRaw = (Math.random() * 0.5) + 1.1; // Ratio between 1.1 and 1.6
+        let r = parseFloat(rRaw.toFixed(2));
+        let n = Math.floor(Math.random() * 6) + 5; // Between 5 and 10
+
+        dpTarget = Math.random() > 0.5 ? 2 : 1; // Ask for 1 or 2 decimal places
+
+        let rawUn = u1 * Math.pow(r, n - 1);
+        let rawSn = (u1 * (Math.pow(r, n) - 1)) / (r - 1);
+
+        correctUn = parseFloat(rawUn.toFixed(dpTarget));
+        correctSn = parseFloat(rawSn.toFixed(dpTarget));
+
+        document.getElementById('problemDisplay').innerHTML = `A geometric sequence has a first term <strong>u<sub>1</sub> = ${u1}</strong> and a common ratio <strong>r = ${r}</strong>.<br><br>Find the <strong>${n}th</strong> term (u<sub>${n}</sub>) and the sum of the first <strong>${n}</strong> terms (S<sub>${n}</sub>).`;
+        
+        let ruleText = `(Correct to ${dpTarget} decimal place${dpTarget > 1 ? 's' : ''})`;
+        document.getElementById('hintUn').innerHTML = ruleText;
+        document.getElementById('hintSn').innerHTML = ruleText;
+
+        document.getElementById('inputUn').value = ''; 
+        document.getElementById('inputSn').value = '';
+        document.getElementById('feedback').innerHTML = '';
+    }
+
+    function checkAnswer() {
+        let userUn = parseFloat(document.getElementById('inputUn').value);
+        let userSn = parseFloat(document.getElementById('inputSn').value);
+        
+        let tolerance = 0.05; // allow small rounding tolerance
+        if (Math.abs(userUn - correctUn) <= tolerance && Math.abs(userSn - correctSn) <= tolerance) {
+            document.getElementById('feedback').innerHTML = "✅ Correct! Great job handling the exponential formulas.";
+            document.getElementById('feedback').className = "correct";
+        } else {
+            document.getElementById('feedback').innerHTML = "❌ Try Again. Ensure you are rounding strictly to the requested decimal places.";
+            document.getElementById('feedback').className = "incorrect";
+        }
+    }
+    window.onload = generateProblem;
+</script>
+</body>
+</html>

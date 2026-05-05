@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Arithmetic Sequences Drill</title>
+<style>
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f7f6; padding: 20px; color: #333; }
+    .container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
+    h3 { color: #2980b9; margin-top: 0; }
+    .problem-box { font-size: 1.1em; margin-bottom: 15px; padding: 15px; background: #e8f4f8; border-radius: 5px; line-height: 1.5; }
+    label { font-weight: bold; display: block; margin-top: 10px; }
+    input { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    button { background: #2980b9; color: white; border: none; padding: 10px; margin-top: 15px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 1em; }
+    button:hover { background: #3498db; }
+    .btn-new { background: #27ae60; }
+    .btn-new:hover { background: #2ecc71; }
+    #feedback { margin-top: 15px; font-weight: bold; text-align: center; }
+    .correct { color: #27ae60; }
+    .incorrect { color: #c0392b; }
+    .hint { font-size: 0.85em; color: #7f8c8d; font-weight: normal; }
+</style>
+</head>
+<body>
+<div class="container">
+    <h3>Drill: Arithmetic Sequences & Series</h3>
+    <div class="problem-box" id="problemDisplay">Loading...</div>
+    
+    <label>1. Find the value of u<sub>n</sub> <span class="hint">(Exact value)</span>:</label>
+    <input type="number" id="inputUn" step="any" placeholder="Enter term value">
+    
+    <label>2. Find the sum S<sub>n</sub> <span class="hint">(Exact value)</span>:</label>
+    <input type="number" id="inputSn" step="any" placeholder="Enter total sum">
+    
+    <button onclick="checkAnswer()">Check Answer</button>
+    <button class="btn-new" onclick="generateProblem()">New Problem</button>
+    <div id="feedback"></div>
+</div>
+<script>
+    let correctUn = 0;
+    let correctSn = 0;
+
+    function generateProblem() {
+        let u1 = Math.floor(Math.random() * 50) + 10;
+        let d = Math.floor(Math.random() * 15) + 3;
+        let n = Math.floor(Math.random() * 15) + 10; // Between 10 and 24
+
+        correctUn = u1 + (n - 1) * d;
+        correctSn = (n / 2) * (2 * u1 + (n - 1) * d);
+
+        document.getElementById('problemDisplay').innerHTML = `An arithmetic sequence has a first term <strong>u<sub>1</sub> = ${u1}</strong> and a common difference <strong>d = ${d}</strong>.<br><br>Find the <strong>${n}th</strong> term (u<sub>${n}</sub>) and the sum of the first <strong>${n}</strong> terms (S<sub>${n}</sub>).`;
+        
+        document.getElementById('inputUn').value = ''; 
+        document.getElementById('inputSn').value = '';
+        document.getElementById('feedback').innerHTML = '';
+    }
+
+    function checkAnswer() {
+        let userUn = parseFloat(document.getElementById('inputUn').value);
+        let userSn = parseFloat(document.getElementById('inputSn').value);
+        
+        if (Math.abs(userUn - correctUn) < 0.01 && Math.abs(userSn - correctSn) < 0.01) {
+            document.getElementById('feedback').innerHTML = "✅ Correct! Formulas applied perfectly.";
+            document.getElementById('feedback').className = "correct";
+        } else {
+            document.getElementById('feedback').innerHTML = "❌ Try Again. Check your formulas: u<sub>n</sub> = u<sub>1</sub>+(n-1)d and S<sub>n</sub> = (n/2)(2u<sub>1</sub>+(n-1)d)";
+            document.getElementById('feedback').className = "incorrect";
+        }
+    }
+    window.onload = generateProblem;
+</script>
+</body>
+</html>

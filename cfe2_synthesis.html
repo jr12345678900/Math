@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>IB Synthesis: Salary Comparison</title>
+<style>
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f7f6; padding: 20px; color: #333; }
+    .container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 600px; margin: auto; }
+    h3 { color: #d35400; margin-top: 0; border-bottom: 2px solid #d35400; padding-bottom: 5px; }
+    .problem-box { font-size: 1.1em; margin-bottom: 20px; padding: 15px; background: #fdf2e9; border-radius: 5px; line-height: 1.6; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    .column { background: #fafafa; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+    h4 { margin-top: 0; text-align: center; color: #2c3e50; }
+    label { font-weight: bold; display: block; margin-top: 10px; font-size: 0.9em; }
+    input { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    button { background: #27ae60; color: white; border: none; padding: 12px; margin-top: 10px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 1em; font-weight: bold; }
+    button:hover { background: #2ecc71; }
+    .btn-new { background: #34495e; margin-top: 10px; }
+    .btn-new:hover { background: #2c3e50; }
+    #feedback { margin-top: 15px; font-weight: bold; text-align: center; }
+    .correct { color: #27ae60; }
+    .incorrect { color: #c0392b; }
+    .hint { font-size: 0.85em; color: #7f8c8d; font-weight: normal; }
+</style>
+</head>
+<body>
+<div class="container">
+    <h3>Culminating Task: Synthesis</h3>
+    <div class="problem-box" id="problemDisplay">Loading...</div>
+    
+    <div class="grid">
+        <div class="column">
+            <h4>Option A (Arithmetic)</h4>
+            <label>1. Salary in Year <span class="yrSpan"></span> <span class="hint">(Exact)</span></label>
+            <input type="number" id="inputA_Un" step="any">
+            <label>2. Total earned over <span class="yrSpan"></span> years <span class="hint">(Exact)</span></label>
+            <input type="number" id="inputA_Sn" step="any">
+        </div>
+        <div class="column">
+            <h4>Option B (Geometric)</h4>
+            <label>3. Salary in Year <span class="yrSpan"></span> <span class="hint">(2 dec. places)</span></label>
+            <input type="number" id="inputB_Un" step="any">
+            <label>4. Total earned over <span class="yrSpan"></span> years <span class="hint">(2 dec. places)</span></label>
+            <input type="number" id="inputB_Sn" step="any">
+        </div>
+    </div>
+    
+    <button onclick="checkAnswer()">Check All Answers</button>
+    <button class="btn-new" onclick="generateProblem()">Generate New Scenario</button>
+    <div id="feedback"></div>
+</div>
+<script>
+    let u1_A = 0, d_A = 0, u1_B = 0, r_B = 0, n = 0;
+    let ansA_Un = 0, ansA_Sn = 0, ansB_Un = 0, ansB_Sn = 0;
+
+    function generateProblem() {
+        u1_A = Math.floor(Math.random() * 10000) + 40000;
+        d_A = Math.floor(Math.random() * 1500) + 1500;
+        
+        u1_B = u1_A - (Math.floor(Math.random() * 4000) + 2000); // B starts lower
+        let pct = Math.floor(Math.random() * 3) + 4; // 4% to 6%
+        r_B = 1 + (pct / 100);
+        
+        n = Math.floor(Math.random() * 5) + 8; // 8 to 12 years
+
+        // Calculations
+        ansA_Un = u1_A + (n - 1) * d_A;
+        ansA_Sn = (n / 2) * (2 * u1_A + (n - 1) * d_A);
+
+        let rawB_Un = u1_B * Math.pow(r_B, n - 1);
+        let rawB_Sn = (u1_B * (Math.pow(r_B, n) - 1)) / (r_B - 1);
+
+        ansB_Un = parseFloat(rawB_Un.toFixed(2));
+        ansB_Sn = parseFloat(rawB_Sn.toFixed(2));
+
+        document.getElementById('problemDisplay').innerHTML = `
+            Sophia has been offered two different jobs. <br><br>
+            <strong>Option A:</strong> A starting salary of $${u1_A} with an annual guaranteed raise of $${d_A}.<br>
+            <strong>Option B:</strong> A starting salary of $${u1_B} with an annual raise of ${pct}%.<br><br>
+            Sophia plans to stay at the company for <strong>${n} years</strong>. Calculate her prospective earnings for both options.
+        `;
+
+        let spans = document.querySelectorAll('.yrSpan');
+        spans.forEach(s => s.innerText = n);
+
+        document.getElementById('inputA_Un').value = ''; document.getElementById('inputA_Sn').value = '';
+        document.getElementById('inputB_Un').value = ''; document.getElementById('inputB_Sn').value = '';
+        document.getElementById('feedback').innerHTML = '';
+    }
+
+    function checkAnswer() {
+        let uA_Un = parseFloat(document.getElementById('inputA_Un').value);
+        let uA_Sn = parseFloat(document.getElementById('inputA_Sn').value);
+        let uB_Un = parseFloat(document.getElementById('inputB_Un').value);
+        let uB_Sn = parseFloat(document.getElementById('inputB_Sn').value);
+        
+        let aMatch = Math.abs(uA_Un - ansA_Un) < 0.1 && Math.abs(uA_Sn - ansA_Sn) < 0.1;
+        let bMatch = Math.abs(uB_Un - ansB_Un) < 0.1 && Math.abs(uB_Sn - ansB_Sn) < 0.1;
+
+        if (aMatch && bMatch) {
+            document.getElementById('feedback').innerHTML = "✅ Phenomenal! All sequence and series calculations are correct.";
+            document.getElementById('feedback').className = "correct";
+        } else if (!aMatch && bMatch) {
+            document.getElementById('feedback').innerHTML = "❌ Option B is correct, but check your Option A (Arithmetic) calculations.";
+            document.getElementById('feedback').className = "incorrect";
+        } else if (aMatch && !bMatch) {
+            document.getElementById('feedback').innerHTML = "❌ Option A is correct, but check your Option B (Geometric) rounding/formulas.";
+            document.getElementById('feedback').className = "incorrect";
+        } else {
+            document.getElementById('feedback').innerHTML = "❌ Try Again. Double check all formulas and rounding instructions.";
+            document.getElementById('feedback').className = "incorrect";
+        }
+    }
+    window.onload = generateProblem;
+</script>
+</body>
+</html>

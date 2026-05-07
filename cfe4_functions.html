@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFE Review 4: Mastery App</title>
+<style>
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f7f6; padding: 20px; color: #333; margin: 0; }
+    .container { background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 700px; margin: auto; }
+    h1 { color: #2c3e50; text-align: center; border-bottom: 3px solid #f39c12; padding-bottom: 10px; }
+    
+    /* Progress Bar */
+    .progress-bar { display: flex; justify-content: space-between; background: #ecf0f1; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; }
+    .active-skill { color: #2980b9; }
+    
+    /* Level Selectors */
+    .level-btn { border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; color: #333; margin-right: 10px; transition: transform 0.1s; }
+    .level-btn:hover { transform: scale(1.05); }
+    .btn-yellow { background: #f1c40f; }
+    .btn-green { background: #2ecc71; color: white; }
+    .btn-purple { background: #9b59b6; color: white; }
+
+    /* Lesson Modal */
+    #lessonBox { display: none; background: #e8f4f8; padding: 15px; border-left: 5px solid #3498db; margin-bottom: 20px; border-radius: 4px; }
+    
+    /* Quiz Area */
+    .question-box { font-size: 1.2em; margin: 20px 0; padding: 15px; border: 2px dashed #bdc3c7; border-radius: 8px; background: #fafafa; }
+    .input-row { margin-bottom: 10px; font-size: 1.1em; font-weight: bold; }
+    .input-row input { font-size: 1em; padding: 5px; width: 80px; text-align: center; margin: 0 10px; border: 1px solid #ccc; border-radius: 4px; }
+    
+    /* Actions */
+    .action-btn { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; margin-top: 10px; font-weight: bold; color: white; }
+    .btn-submit { background: #34495e; width: 100%; margin-bottom: 10px; font-size: 1.2em; }
+    .btn-submit:hover { background: #2c3e50; }
+    .btn-hint { background: #e67e22; }
+    .btn-lesson { background: #3498db; }
+    
+    /* Feedback */
+    #feedback { margin-top: 15px; font-weight: bold; text-align: center; min-height: 24px; color: #d35400; }
+    
+    /* Game Area */
+    #gameZone { display: none; text-align: center; }
+    #gameBoard { width: 100%; height: 300px; background: #34495e; position: relative; border-radius: 8px; overflow: hidden; cursor: crosshair; margin: 20px 0; }
+    #target { width: 40px; height: 40px; background: #e74c3c; border-radius: 50%; position: absolute; transition: top 0.2s, left 0.2s; }
+    .btn-skip { background: #95a5a6; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div class="container" id="mainApp">
+    <h1>CFE Review 4: Linear Functions</h1>
+    
+    <div class="progress-bar">
+        <span id="navSkill1" class="active-skill">Skill 1: Intercepts [<span id="score1">0</span>/2]</span>
+        <span id="navSkill2">Skill 2: Parallel/Perp [<span id="score2">0</span>/2]</span>
+        <span id="navSkill3">Skill 3: Models [<span id="score3">0</span>/2]</span>
+    </div>
+
+    <div id="quizZone">
+        <div>
+            <button class="level-btn btn-yellow" onclick="loadQuestion('yellow')">Prerequisite</button>
+            <button class="level-btn btn-green" onclick="loadQuestion('green')">On-Level</button>
+            <button class="level-btn btn-purple" onclick="loadQuestion('purple')">Advanced</button>
+        </div>
+
+        <div style="margin-top: 15px;">
+            <button class="action-btn btn-lesson" onclick="toggleLesson()">📖 Learn Lesson</button>
+        </div>
+
+        <div id="lessonBox"></div>
+
+        <div class="question-box">
+            <div id="qText" style="margin-bottom: 15px;">Select a difficulty level above to begin.</div>
+            <div id="qInputs"></div>
+        </div>
+
+        <button id="submitBtn" class="action-btn btn-submit" onclick="submitAnswer()" disabled>Check Answer</button>
+        <button id="hintBtn" class="action-btn btn-hint" onclick="useHint()" style="display:none;">💡 Get Hint 1</button>
+        
+        <div id="feedback"></div>
+    </div>
+
+    <div id="gameZone">
+        <h2 style="color: #27ae60;">🎉 Skill Complete! Reward Unlocked!</h2>
+        <p>Take a 2-minute brain break. Click the target as fast as you can!</p>
+        <h3 id="gameTimer" style="color: #e74c3c;">Time: 120s | Score: <span id="gameScore">0</span></h3>
+        <div id="gameBoard" onclick="missTarget()">
+            <div id="target" onclick="hitTarget(event)"></div>
+        </div>
+        <button class="btn-skip" onclick="endGame()">Skip Break & Continue Work</button>
+    </div>
+    
+    <div id="endZone" style="display:none; text-align: center;">
+        <h2 style="color: #8e44ad;">🏆 Module Complete! 🏆</h2>
+        <p>You have mastered Functions and Linear Models. You may close this page.</p>
+    </div>
+</div>
+
+<script>
+// --- QUESTION BANK ---
+const bank = {
+    1: {
+        lesson: "<strong>Linear Forms:</strong> The equation of a line is <code>y = mx + c</code>. 'm' is the gradient (slope), 'c' is the y-intercept. If given <code>Ax + By = D</code>, solve for y first.",
+        yellow: [
+            { q: "Given the line y = 5x - 2, find the gradient (m) and y-intercept (c).", f: [{l:"m =", a:5}, {l:"c =", a:-2}], h1: "Look at the numbers in the y = mx + c format.", h2: "The number attached to x is m (5). The constant is c (-2)." },
+            { q: "Given the line y = -3x + 7, find the gradient (m) and y-intercept (c).", f: [{l:"m =", a:-3}, {l:"c =", a:7}], h1: "Look at the numbers in the y = mx + c format.", h2: "m is -3, c is 7." }
+        ],
+        green: [
+            { q: "Given the equation 3x + 2y = 12, find the gradient (m) and y-intercept (c).", f: [{l:"m =", a:-1.5}, {l:"c =", a:6}], h1: "Subtract 3x from both sides to isolate the y-term.", h2: "2y = -3x + 12. Divide everything by 2. y = -1.5x + 6." },
+            { q: "Given the equation x - 4y = 8, find the gradient (m) and y-intercept (c).", f: [{l:"m =", a:0.25}, {l:"c =", a:-2}], h1: "Subtract x from both sides to isolate the y-term.", h2: "-4y = -x + 8. Divide everything by -4. y = 0.25x - 2." }
+        ],
+        purple: [
+            { q: "A line passes through the points (2, 5) and (4, 11). Find the gradient (m) and y-intercept (c).", f: [{l:"m =", a:3}, {l:"c =", a:-1}], h1: "Calculate m = (y2 - y1) / (x2 - x1).", h2: "m = (11-5)/(4-2) = 6/2 = 3. Plug in (2,5): 5 = 3(2) + c. 5 = 6 + c. c = -1." },
+            { q: "A line passes through the points (-1, 4) and (3, -4). Find the gradient (m) and y-intercept (c).", f: [{l:"m =", a:-2}, {l:"c =", a:2}], h1: "Calculate m = (y2 - y1) / (x2 - x1).", h2: "m = (-4-4)/(3 - -1) = -8/4 = -2. Plug in (-1,4): 4 = -2(-1) + c. 4 = 2 + c. c = 2." }
+        ]
+    },
+    2: {
+        lesson: "<strong>Parallel & Perpendicular:</strong> Parallel lines have the SAME gradient (m1 = m2). Perpendicular lines have NEGATIVE RECIPROCAL gradients (m1 * m2 = -1).",
+        yellow: [
+            { q: "Line A has a gradient of 4. Line B is parallel to Line A. What is the gradient of Line B?", f: [{l:"m =", a:4}], h1: "Parallel lines have the exact same gradient.", h2: "Since they are parallel, m = 4." },
+            { q: "Line A has a gradient of 0.5. Line B is perpendicular to Line A. What is the gradient of Line B?", f: [{l:"m =", a:-2}], h1: "Flip the fraction and change the sign.", h2: "0.5 is 1/2. Flipped is 2/1. Change sign to -2." }
+        ],
+        green: [
+            { q: "Line L1 has a gradient of 2. Line L2 is perpendicular to L1 and passes through (0, 4). Find m and c for L2.", f: [{l:"m =", a:-0.5}, {l:"c =", a:4}], h1: "First find the perpendicular gradient. Then use the point to find c.", h2: "Perpendicular to 2 is -0.5. Since it crosses at x=0, the y-intercept c is simply 4." },
+            { q: "Line L1 is y = -0.25x + 6. Line L2 is perpendicular and passes through (0, -5). Find m and c for L2.", f: [{l:"m =", a:4}, {l:"c =", a:-5}], h1: "Find the perpendicular slope to -0.25.", h2: "-0.25 is -1/4. Perpendicular is 4. The point (0,-5) gives us the intercept c = -5." }
+        ],
+        purple: [
+            { q: "L1 is 2x + y = 8. L2 is perpendicular to L1 and passes through (4, 1). Find m and c for L2.", f: [{l:"m =", a:0.5}, {l:"c =", a:-1}], h1: "First, rearrange L1 to find its slope. Then find the perpendicular slope.", h2: "L1: y = -2x + 8 (m=-2). L2 m = 0.5. Plug in (4,1): 1 = 0.5(4) + c. 1 = 2 + c. c = -1." },
+            { q: "L1 is x - 3y = 9. L2 is perpendicular to L1 and passes through (2, -1). Find m and c for L2.", f: [{l:"m =", a:-3}, {l:"c =", a:5}], h1: "Rearrange L1 to find its slope. Then find the perpendicular slope.", h2: "L1: -3y = -x + 9 -> y = (1/3)x - 3. L2 m = -3. Plug in (2,-1): -1 = -3(2) + c. -1 = -6 + c. c = 5." }
+        ]
+    },
+    3: {
+        lesson: "<strong>Intersections & Modeling:</strong> To find where two models intersect, set them equal to each other algebraically OR use the GDC (Menu -> Algebra -> Solve System).",
+        yellow: [
+            { q: "Using your GDC, find the intersection of y = 2x and y = x + 5.", f: [{l:"x =", a:5}, {l:"y =", a:10}], h1: "Set 2x = x + 5 and solve for x.", h2: "Subtract x from both sides: x = 5. Plug 5 back in: y = 2(5) = 10." },
+            { q: "Using your GDC, find the intersection of y = 3x - 1 and y = x + 7.", f: [{l:"x =", a:4}, {l:"y =", a:11}], h1: "Set 3x - 1 = x + 7 and solve.", h2: "Subtract x: 2x - 1 = 7. Add 1: 2x = 8. x = 4. Plug back in: y = 3(4) - 1 = 11." }
+        ],
+        green: [
+            { q: "Taxi A costs C = 2d + 4. Taxi B costs C = 1.5d + 6. At what distance (d) are the costs equal?", f: [{l:"d =", a:4}], h1: "Set the two equations equal to each other.", h2: "2d + 4 = 1.5d + 6. Subtract 1.5d: 0.5d + 4 = 6. Subtract 4: 0.5d = 2. d = 4." },
+            { q: "Gym A costs $20/mo plus $5/visit (C = 5v + 20). Gym B is $10/mo plus $7/visit (C = 7v + 10). Find visits (v) where costs are equal.", f: [{l:"v =", a:5}], h1: "Set 5v + 20 equal to 7v + 10.", h2: "5v + 20 = 7v + 10. Subtract 5v: 20 = 2v + 10. Subtract 10: 10 = 2v. v = 5." }
+        ],
+        purple: [
+            { q: "Supply is P = 0.5x + 10. Demand is P = -0.25x + 25. Find equilibrium quantity (x) and price (P).", f: [{l:"x =", a:20}, {l:"P =", a:20}], h1: "Use the GDC linear solver, or set them equal: 0.5x + 10 = -0.25x + 25.", h2: "Add 0.25x: 0.75x + 10 = 25. Subtract 10: 0.75x = 15. x = 20. Plug back in: P = 0.5(20) + 10 = 20." },
+            { q: "Cost is C = 15x + 200. Revenue is R = 25x - 50. Find the break-even quantity (x) and the total amount (C or R).", f: [{l:"x =", a:25}, {l:"Amount =", a:575}], h1: "Set Cost = Revenue to break even.", h2: "15x + 200 = 25x - 50. Subtract 15x: 200 = 10x - 50. Add 50: 250 = 10x. x = 25. Plug back in: 15(25) + 200 = 575." }
+        ]
+    }
+};
+
+// --- APP STATE ---
+let currentSkill = 1;
+let currentScore = 0;
+let currentQ = null;
+let hintsUsed = 0;
+let canEarnCredit = true;
+
+// --- CORE LOGIC ---
+function toggleLesson() {
+    let box = document.getElementById('lessonBox');
+    if(box.style.display === 'block') {
+        box.style.display = 'none';
+    } else {
+        box.innerHTML = bank[currentSkill].lesson;
+        box.style.display = 'block';
+    }
+}
+
+function loadQuestion(level) {
+    let arr = bank[currentSkill][level];
+    currentQ = arr[Math.floor(Math.random() * arr.length)];
+    currentQ.level = level; // Tag for grading logic
+    
+    hintsUsed = 0;
+    canEarnCredit = true;
+    
+    // UI Resets
+    document.getElementById('feedback').innerText = "";
+    document.getElementById('submitBtn').disabled = false;
+    document.getElementById('hintBtn').style.display = "inline-block";
+    document.getElementById('hintBtn').innerText = "💡 Get Hint 1";
+    document.getElementById('hintBtn').disabled = false;
+
+    // Render Question
+    document.getElementById('qText').innerHTML = `<strong>(${level.toUpperCase()}):</strong> ${currentQ.q}`;
+    let inputHTML = "";
+    currentQ.f.forEach((field, i) => {
+        inputHTML += `<div class="input-row">${field.l} <input type="number" id="input_${i}" step="any"> <span id="icon_${i}"></span></div>`;
+    });
+    document.getElementById('qInputs').innerHTML = inputHTML;
+}
+
+function useHint() {
+    hintsUsed++;
+    let fb = document.getElementById('feedback');
+    if (hintsUsed === 1) {
+        fb.innerHTML = `<strong>Hint 1:</strong> ${currentQ.h1}`;
+        document.getElementById('hintBtn').innerText = "🚨 Show Full Solution (No Credit)";
+    } else if (hintsUsed === 2) {
+        fb.innerHTML = `<strong>Full Solution:</strong> ${currentQ.h2} <br><em style="color:#c0392b;">(Credit disabled for this problem. Try a new one!)</em>`;
+        document.getElementById('hintBtn').disabled = true;
+        canEarnCredit = false;
+    }
+}
+
+function submitAnswer() {
+    if(!currentQ) return;
+    let allCorrect = true;
+    
+    currentQ.f.forEach((field, i) => {
+        let val = parseFloat(document.getElementById(`input_${i}`).value);
+        let icon = document.getElementById(`icon_${i}`);
+        // Small tolerance for decimals
+        if (Math.abs(val - field.a) < 0.05) {
+            icon.innerText = "✅";
+        } else {
+            icon.innerText = "❌";
+            allCorrect = false;
+        }
+    });
+
+    let fb = document.getElementById('feedback');
+    if (allCorrect) {
+        document.getElementById('submitBtn').disabled = true;
+        
+        if (currentQ.level === 'yellow') {
+            fb.innerHTML = "✅ Correct! Great warmup. (Select On-Level or Advanced to earn points!)";
+        } else if (!canEarnCredit) {
+            fb.innerHTML = "✅ Correct! But credit was disabled due to using the full solution. Click a level above to try a new one!";
+        } else {
+            // Earn a point!
+            currentScore++;
+            document.getElementById(`score${currentSkill}`).innerText = currentScore;
+            
+            if(currentScore >= 2) {
+                fb.innerHTML = "🌟 Awesome! You mastered this skill. Loading reward...";
+                setTimeout(startRewardGame, 1500);
+            } else {
+                fb.innerHTML = "✅ Correct! You earned a point! Get one more to unlock the next skill.";
+            }
+        }
+    } else {
+        fb.innerHTML = "❌ Some answers are incorrect. Try again or use a hint.";
+    }
+}
+
+// --- GAME LOGIC ---
+let gameTimer;
+let timeLeft = 120;
+let gScore = 0;
+
+function startRewardGame() {
+    document.getElementById('quizZone').style.display = "none";
+    document.getElementById('gameZone').style.display = "block";
+    timeLeft = 120;
+    gScore = 0;
+    document.getElementById('gameScore').innerText = gScore;
+    moveTarget();
+    
+    gameTimer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('gameTimer').innerText = `Time: ${timeLeft}s | Score: ${gScore}`;
+        if(timeLeft <= 0) endGame();
+    }, 1000);
+}
+
+function moveTarget() {
+    let board = document.getElementById('gameBoard');
+    let target = document.getElementById('target');
+    let maxX = board.clientWidth - 40;
+    let maxY = board.clientHeight - 40;
+    target.style.left = Math.floor(Math.random() * maxX) + 'px';
+    target.style.top = Math.floor(Math.random() * maxY) + 'px';
+}
+
+function hitTarget(e) {
+    e.stopPropagation();
+    gScore++;
+    document.getElementById('gameScore').innerText = gScore;
+    moveTarget();
+}
+
+function missTarget() {
+    gScore = Math.max(0, gScore - 1); // penalty for missing
+    document.getElementById('gameScore').innerText = gScore;
+}
+
+function endGame() {
+    clearInterval(gameTimer);
+    document.getElementById('gameZone').style.display = "none";
+    
+    // Move to next skill
+    document.getElementById(`navSkill${currentSkill}`).classList.remove('active-skill');
+    currentSkill++;
+    currentScore = 0;
+    
+    if (currentSkill > 3) {
+        document.getElementById('endZone').style.display = "block";
+    } else {
+        document.getElementById('quizZone').style.display = "block";
+        document.getElementById(`navSkill${currentSkill}`).classList.add('active-skill');
+        document.getElementById('qText').innerHTML = "Skill Unlocked! Select a difficulty level to begin.";
+        document.getElementById('qInputs').innerHTML = "";
+        document.getElementById('hintBtn').style.display = "none";
+        document.getElementById('lessonBox').style.display = "none";
+    }
+}
+</script>
+</body>
+</html>

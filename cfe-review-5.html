@@ -43,7 +43,7 @@
         background: transparent;
         font-family: inherit;
         font-size: 1em;
-        color: #1d4ed8; 
+        color: #1d4ed8; /* Blue text to look like pen */
         font-weight: 700;
         text-align: center;
         outline: none;
@@ -53,8 +53,8 @@
     }
     
     .inline-blank:focus { border-bottom: 2px solid #2563eb; }
-    .w-sm { width: 55px; }
-    .w-md { width: 95px; }
+    .w-sm { width: 50px; }
+    .w-md { width: 90px; }
     .w-lg { width: 140px; }
 
     /* Custom Dropdown Styling */
@@ -86,7 +86,7 @@
     .check-btn { background: var(--secondary); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 15px; transition: 0.2s; }
     .check-btn:hover { background: var(--primary); }
     
-    .svg-container { text-align: center; margin: 15px 0; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed #cbd5e1; }
+    .svg-container { text-align: center; margin: 15px 0; }
 
     /* Hidden Autofill */
     #dev-autofill { position: fixed; bottom: 5px; right: 5px; width: 15px; height: 15px; background: transparent; cursor: pointer; border-radius: 50%; }
@@ -124,7 +124,7 @@
                 <option value=""></option>
                 <option value="positive">positive</option>
                 <option value="negative">negative</option>
-            </select> because the value is dropping over time.
+            </select> because the value is dropping.
         </div>
         <div class="step">
             <strong>3. Trigonometry Rules:</strong> 
@@ -166,9 +166,9 @@
                     • <strong>P/Y & C/Y</strong> = 12
                 </div>
                 <div class="step">
-                    <strong>Step 2: Solve & Round</strong> <em>(Round to the nearest cent)</em><br>
-                    Put your cursor on <strong>PMT</strong> and press enter. The calculator outputs exactly -1076.13815...<br>
-                    Rounded to two decimal places, he pays $ <input type="text" class="inline-blank w-md" data-answer="1076.14"> per month.
+                    <strong>Step 2: Solve</strong><br>
+                    Put your cursor on <strong>PMT</strong> and press enter. The calculator outputs: <input type="text" class="inline-blank w-md" data-answer="-1076.13">. <br>
+                    Therefore, he pays $1,076.13 per month.
                 </div>
                 <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
             </div>
@@ -179,13 +179,13 @@
             <div class="interactive-content">
                 <div class="step">
                     <strong>Step 1: Find the total amount paid back to the bank.</strong><br>
-                    Total Paid = Rounded Monthly Payment &times; Total Months<br>
-                    Total Paid = $1076.14 &times; <input type="text" class="inline-blank w-sm" data-answer="60"> = $ <input type="text" class="inline-blank w-md" data-answer="64568.40">
+                    Total Paid = Monthly Payment &times; Total Months<br>
+                    Total Paid = $1076.13 &times; <input type="text" class="inline-blank w-sm" data-answer="60"> = $ <input type="text" class="inline-blank w-md" data-answer="64567.80">
                 </div>
                 <div class="step">
-                    <strong>Step 2: Subtract the original loan amount.</strong> <em>(Round to the nearest cent)</em><br>
+                    <strong>Step 2: Subtract the original loan amount.</strong><br>
                     Interest = Total Paid - <input type="text" class="inline-blank w-md" data-answer="55000"><br>
-                    Interest = $ <input type="text" class="inline-blank w-md" data-answer="9568.40">
+                    Interest = $ <input type="text" class="inline-blank w-md" data-answer="9567.80">
                 </div>
                 <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
             </div>
@@ -198,11 +198,11 @@
                     If the truck's value depreciates by 14% each year, find its value after 5 years.<br><br>
                     <strong>Step 1: Formula Setup</strong><br>
                     \( FV = \) <input type="text" class="inline-blank w-md" data-answer="55000"> \( \times \left(1 - \frac{14}{100}\right)^{ \text{n} } \)<br>
-                    Notice the minus sign! This simplifies to multiplying the initial value by <input type="text" class="inline-blank w-sm" data-answer="0.86"> to the power of <input type="text" class="inline-blank w-sm" data-answer="5">.
+                    Notice the minus sign! This simplifies to multiplying by <input type="text" class="inline-blank w-sm" data-answer="0.86"> to the power of <input type="text" class="inline-blank w-sm" data-answer="5">.
                 </div>
                 <div class="step">
-                    <strong>Step 2: Calculate</strong> <em>(Round to the nearest cent)</em><br>
-                    The final value of the truck is $ <input type="text" class="inline-blank w-md" data-answer="25873.49">.
+                    <strong>Step 2: Calculate</strong><br>
+                    The final value of the truck is $ <input type="text" class="inline-blank w-md" data-answer="25873.30">.
                 </div>
                 <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
             </div>
@@ -218,28 +218,29 @@
             The angle at corner \(A\) is exactly <strong>72°</strong>.
         </div>
 
+        <div class="svg-container">
+            <svg width="250" height="150" viewBox="0 0 300 200">
+                <polygon points="50,150 250,150 120,30" fill="#f1f5f9" stroke="#0f766e" stroke-width="3" />
+                <path d="M 80,150 A 30,30 0 0,0 70,115" fill="none" stroke="#ef4444" stroke-width="3" />
+                <text x="85" y="135" font-family="sans-serif" font-weight="bold" fill="#ef4444">72°</text>
+                <text x="35" y="165" font-family="sans-serif" font-weight="bold">A</text>
+                <text x="260" y="165" font-family="sans-serif" font-weight="bold">C</text>
+                <text x="110" y="20" font-family="sans-serif" font-weight="bold">B</text>
+                <text x="60" y="85" font-family="sans-serif" font-weight="bold">120</text>
+                <text x="150" y="175" font-family="sans-serif" font-weight="bold">180</text>
+            </svg>
+        </div>
+
         <details>
             <summary>Part A: Calculate the Area of the campground.</summary>
             <div class="interactive-content">
-                <div class="svg-container">
-                    <svg width="250" height="150" viewBox="0 0 300 200">
-                        <polygon points="50,150 250,150 120,30" fill="#f1f5f9" stroke="#0f766e" stroke-width="3" />
-                        <path d="M 80,150 A 30,30 0 0,0 70,115" fill="none" stroke="#ef4444" stroke-width="3" />
-                        <text x="85" y="135" font-family="sans-serif" font-weight="bold" fill="#ef4444">72°</text>
-                        <text x="35" y="165" font-family="sans-serif" font-weight="bold">A</text>
-                        <text x="260" y="165" font-family="sans-serif" font-weight="bold">C</text>
-                        <text x="110" y="20" font-family="sans-serif" font-weight="bold">B</text>
-                        <text x="60" y="85" font-family="sans-serif" font-weight="bold">120m</text>
-                        <text x="150" y="175" font-family="sans-serif" font-weight="bold">180m</text>
-                    </svg>
-                </div>
                 <div class="step">
                     Because we have a Side-Angle-Side (V-Shape), we use the formula: \( \text{Area} = \frac{1}{2}ab\sin C \).<br>
                     Area = 0.5 &times; <input type="text" class="inline-blank w-md" data-answer="120"> &times; <input type="text" class="inline-blank w-md" data-answer="180"> &times; \( \sin( \) <input type="text" class="inline-blank w-sm" data-answer="72"> \(^\circ) \)
                 </div>
                 <div class="step">
                     Putting this in the calculator (ensure you are in Degree mode):<br>
-                    Total Area = <input type="text" class="inline-blank w-md" data-answer="10271"> \( \text{m}^2 \) <em>(Round to the nearest whole number)</em>
+                    Total Area = <input type="text" class="inline-blank w-md" data-answer="10271"> \( \text{m}^2 \) *(Round to nearest whole number)*
                 </div>
                 <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
             </div>
@@ -248,19 +249,6 @@
         <details>
             <summary>Part B: Find the missing length of fence \(BC\).</summary>
             <div class="interactive-content">
-                <div class="svg-container">
-                    <svg width="250" height="150" viewBox="0 0 300 200">
-                        <polygon points="50,150 250,150 120,30" fill="#f1f5f9" stroke="#0f766e" stroke-width="3" />
-                        <path d="M 80,150 A 30,30 0 0,0 70,115" fill="none" stroke="#ef4444" stroke-width="3" />
-                        <text x="85" y="135" font-family="sans-serif" font-weight="bold" fill="#ef4444">72°</text>
-                        <text x="35" y="165" font-family="sans-serif" font-weight="bold">A</text>
-                        <text x="260" y="165" font-family="sans-serif" font-weight="bold">C</text>
-                        <text x="110" y="20" font-family="sans-serif" font-weight="bold">B</text>
-                        <text x="60" y="85" font-family="sans-serif" font-weight="bold">120m</text>
-                        <text x="150" y="175" font-family="sans-serif" font-weight="bold">180m</text>
-                        <text x="195" y="85" font-family="sans-serif" font-weight="bold" fill="#2563eb">? m</text>
-                    </svg>
-                </div>
                 <div class="step">
                     To find a missing side across from a known angle when we have a V-shape, we use the 
                     <select class="inline-blank w-lg" data-answer="cosine rule">
@@ -271,8 +259,8 @@
                 </div>
                 <div class="step">
                     \( (BC)^2 = 120^2 + 180^2 - 2(120)(180)\cos( \) <input type="text" class="inline-blank w-sm" data-answer="72"> \(^\circ) \)<br>
-                    \( (BC)^2 = \) <input type="text" class="inline-blank w-md" data-answer="33450.4"> <em>(Keep at least 1 decimal place here)</em><br>
-                    \( BC = \) <input type="text" class="inline-blank w-md" data-answer="182.9"> m <em>(Square root to finish, round to 1 decimal place)</em>
+                    \( (BC)^2 = \) <input type="text" class="inline-blank w-md" data-answer="33450.5"> <em>(Keep 1 decimal place)</em><br>
+                    \( BC = \) <input type="text" class="inline-blank w-md" data-answer="182.9"> m <em>(Square root to finish)</em>
                 </div>
                 <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
             </div>
@@ -281,21 +269,8 @@
         <details>
             <summary>Part C: Calculate the size of angle \(C\).</summary>
             <div class="interactive-content">
-                <div class="svg-container">
-                    <svg width="250" height="150" viewBox="0 0 300 200">
-                        <polygon points="50,150 250,150 120,30" fill="#f1f5f9" stroke="#0f766e" stroke-width="3" />
-                        <path d="M 80,150 A 30,30 0 0,0 70,115" fill="none" stroke="#ef4444" stroke-width="3" />
-                        <text x="85" y="135" font-family="sans-serif" font-weight="bold" fill="#ef4444">72°</text>
-                        <text x="35" y="165" font-family="sans-serif" font-weight="bold">A</text>
-                        <text x="260" y="165" font-family="sans-serif" font-weight="bold">C</text>
-                        <text x="110" y="20" font-family="sans-serif" font-weight="bold">B</text>
-                        <text x="60" y="85" font-family="sans-serif" font-weight="bold">120m</text>
-                        <text x="150" y="175" font-family="sans-serif" font-weight="bold">180m</text>
-                        <text x="195" y="85" font-family="sans-serif" font-weight="bold" fill="#2563eb">182.9m</text>
-                    </svg>
-                </div>
                 <div class="step">
-                    We now have a matching pair! Side \(BC\) (182.9) pairs with Angle \(A\) (72°). Side \(AB\) (120) pairs with Angle \(C\). We switch to the 
+                    Now we have a matching pair! Side \(BC\) pairs with Angle \(A\). Side \(AB\) pairs with Angle \(C\). We switch to the 
                     <select class="inline-blank w-lg" data-answer="sine rule">
                         <option value=""></option>
                         <option value="sine rule">Sine Rule</option>
@@ -304,9 +279,9 @@
                 </div>
                 <div class="step">
                     \( \frac{\sin C}{120} = \frac{\sin 72^\circ}{182.9} \)<br><br>
-                    Multiply both sides by <input type="text" class="inline-blank w-sm" data-answer="120"> to isolate \(\sin C\).<br>
+                    Multiply both sides by <input type="text" class="inline-blank w-sm" data-answer="120">.<br>
                     \( \sin C = \) 0.6240...<br>
-                    Use the inverse function, \( \sin^{-1}(0.6240...) \) to get Angle C = <input type="text" class="inline-blank w-md" data-answer="38.6"> \(^\circ\) <em>(Round to 1 decimal place)</em>.
+                    Use the inverse function, \( \sin^{-1}(0.6240...) \) to get Angle C = <input type="text" class="inline-blank w-md" data-answer="38.6"> \(^\circ\).
                 </div>
                 <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
             </div>
@@ -320,6 +295,7 @@
 <script>
     // Checker Function for a specific section
     function checkAnswers(btnElement) {
+        // Find the parent container of this specific button
         let container = btnElement.parentElement;
         let inputs = container.querySelectorAll('.inline-blank');
         
@@ -332,23 +308,10 @@
             
             if (studentAnswer === "") {
                 // Do nothing if empty
+            } else if (studentAnswer === correctAnswer) {
+                input.classList.add('correct');
             } else {
-                // Smart Number Checking (handles trailing zeros like 9568.4 vs 9568.40)
-                let isNum = !isNaN(studentAnswer) && !isNaN(correctAnswer);
-                if (isNum) {
-                    if (Math.abs(parseFloat(studentAnswer) - parseFloat(correctAnswer)) < 0.01) {
-                        input.classList.add('correct');
-                    } else {
-                        input.classList.add('incorrect');
-                    }
-                } else {
-                    // String fallback for dropdowns
-                    if (studentAnswer === correctAnswer) {
-                        input.classList.add('correct');
-                    } else {
-                        input.classList.add('incorrect');
-                    }
-                }
+                input.classList.add('incorrect');
             }
         });
     }

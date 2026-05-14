@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFE Review 6: Interactive Notes</title>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }
+  };
+</script>
+
+<style>
+    :root {
+        --primary: #4f46e5; /* Indigo */
+        --secondary: #4338ca; /* Teal-Indigo */
+        --bg-color: #f8fafc;
+        --card-bg: #ffffff;
+        --text-main: #334155;
+        --success: #10b981;
+        --danger: #ef4444;
+        --highlight: #fef08a; /* Amber-100 */
+    }
+    
+    body { font-family: 'Inter', 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 20px; line-height: 1.8; font-size: 110%; }
+    .lesson-container { max-width: 900px; margin: auto; }
+    
+    /* Header */
+    .hero-header { background: linear-gradient(135deg, #312e81, #4f46e5); color: white; padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 30px; box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.2); }
+    .hero-header h1 { margin: 0; font-size: 2.3em; letter-spacing: -0.5px; }
+    .badge { display: inline-block; background: #fbbf24; color: #1e293b; padding: 4px 12px; border-radius: 20px; font-size: 0.85em; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; }
+    
+    /* Sections */
+    .section-card { background: var(--card-bg); padding: 35px; border-radius: 12px; margin-bottom: 35px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-top: 5px solid var(--secondary); }
+    .section-card h2 { margin-top: 0; color: var(--primary); font-size: 1.6em; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+    .context-box { background: #eef2ff; padding: 15px 20px; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 20px; color: #1e3a8a; }
+
+    /* Interactive Inline Inputs & Dropdowns */
+    .inline-blank {
+        border: none;
+        border-bottom: 2px dashed #94a3b8;
+        background: transparent;
+        font-family: inherit;
+        font-size: 1em;
+        color: #2563eb; 
+        font-weight: 700;
+        text-align: center;
+        outline: none;
+        padding: 0 5px;
+        transition: all 0.3s;
+        margin: 0 5px;
+        cursor: pointer;
+    }
+    
+    .inline-blank:focus { border-bottom: 2px solid #2563eb; background: #eff6ff; }
+    .w-sm { width: 55px; }
+    .w-md { width: 95px; }
+    .w-lg { width: 150px; }
+    .w-xl { width: 200px; }
+
+    /* Custom Dropdown Styling */
+    select.inline-blank {
+        appearance: none;
+        -webkit-appearance: none;
+        padding-right: 18px;
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394a3b8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+        background-repeat: no-repeat;
+        background-position: right center;
+        background-size: 10px auto;
+    }
+
+    /* Validation Colors */
+    .correct { border-bottom: 2px solid var(--success) !important; color: var(--success); }
+    .incorrect { border-bottom: 2px solid var(--danger) !important; color: var(--danger); background: #fef2f2; }
+
+    /* Collapsible Details */
+    details { border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; }
+    summary { padding: 15px; font-weight: bold; cursor: pointer; background: #f8fafc; font-size: 1.1em; outline: none; list-style: none; display: flex; align-items: center; justify-content: space-between; }
+    summary::after { content: "+"; color: var(--secondary); font-size: 1.4em; }
+    details[open] summary::after { content: "−"; }
+    details[open] summary { border-bottom: 1px solid #e2e8f0; }
+    
+    .interactive-content { padding: 25px; background: #ffffff; }
+    .step { margin-bottom: 15px; }
+    .calc-box { background: #f1f5f9; padding: 10px 15px; border-radius: 6px; font-family: monospace; font-size: 1.1em; color: #334155; margin-top: 10px; display: inline-block;}
+    
+    .check-btn { background: var(--secondary); color: white; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 15px; transition: 0.2s; font-size: 0.95em; }
+    .check-btn:hover { background: var(--primary); }
+    
+    .svg-container { text-align: center; margin: 20px 0; background: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
+
+    /* Hidden Autofill */
+    #dev-autofill { position: fixed; bottom: 5px; right: 5px; width: 15px; height: 15px; background: transparent; cursor: pointer; border-radius: 50%; }
+</style>
+</head>
+<body>
+
+<div class="lesson-container">
+
+    <header class="hero-header">
+        <span class="badge">Day 3 of 3 • The Finale</span>
+        <h1>Interactive Notes: CFE Review 6</h1>
+        <p>Voronoi Diagrams & Sinusoidal Functions</p>
+    </header>
+
+    <section class="section-card">
+        <h2>📚 The Interactive Cheat Sheet</h2>
+        <div class="step">
+            <strong>1. Voronoi Diagrams:</strong> A Voronoi diagram divides a space into regions (cells) based on the closest distance to a specific point (a "site"). The boundaries (edges) between these regions are always the 
+            <select class="inline-blank w-xl" data-answer="perpendicular bisectors">
+                <option value=""></option>
+                <option value="parallel lines">parallel lines</option>
+                <option value="perpendicular bisectors">perpendicular bisectors</option>
+                <option value="tangents">tangents</option>
+            </select> of the line segment connecting two sites. 
+            <br>• <em>Intersection points</em> where three boundaries meet are called 
+            <select class="inline-blank w-lg" data-answer="vertices">
+                <option value=""></option>
+                <option value="vertices">vertices</option>
+                <option value="midpoints">midpoints</option>
+                <option value="origins">origins</option>
+            </select>. A vertex is equidistant from all three surrounding sites.
+        </div>
+        <div class="step">
+            <strong>2. Sinusoidal Models \( y = a \sin(b(x-c)) + d \):</strong> 
+            <br>• The Principal Axis (\(d\)) is the center line. It is found by calculating the 
+            <select class="inline-blank w-lg" data-answer="average">
+                <option value=""></option>
+                <option value="difference">difference</option>
+                <option value="average">average (mean)</option>
+                <option value="product">product</option>
+            </select> of the Maximum and Minimum values.
+            <br>• The Amplitude (\(a\)) is the distance from the center to the peak. You find it by doing: \( (Max - Min) \) divided by 
+            <select class="inline-blank w-sm" data-answer="2">
+                <option value=""></option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="360">360</option>
+            </select>.
+            <br>• The Period is how long it takes to repeat one full wave. The formula to find \(b\) is: \( b = \frac{360^\circ}{\text{Period}} \).
+        </div>
+        <button class="check-btn" onclick="checkAnswers(this)">Check Section</button>
+    </section>
+
+    <section class="section-card">
+        <h2>🗺️ Guided Practice 1: Toxic Waste & Voronoi</h2>
+        <div class="context-box">
+            A city is mapping the locations of three chemical plants (Sites A, B, and C). 
+            They create a Voronoi diagram to determine which plant is closest to any given house in the city. 
+            The coordinates are: \( A(2, 8) \), \( B(6, 2) \), and \( C(10, 8) \).
+        </div>
+
+        <div class="svg-container">
+            <svg width="400" height="300" viewBox="-2 -2 14 12" style="background: #f8fafc; border: 1px solid #cbd5e1;">
+                <path d="M0,0 L12,0 M0,2 L12,2 M0,4 L12,4 M0,6 L12,6 M0,8 L12,8 M0,10 L12,10" stroke="#e2e8f0" stroke-width="0.05" />
+                <path d="M0,0 L0,12 M2,0 L2,12 M4,0 L4,12 M6,0 L6,12 M8,0 L8,12 M10,0 L10,12 M12,0 L12,12" stroke="#e2e8f0" stroke-width="0.05" />
+                
+                <line x1="6" y1="12" x2="6" y2="5" stroke="#ef4444" stroke-width="0.1" /> 
+                <line x1="6" y1="5" x2="-1" y2="0.33" stroke="#ef4444" stroke-width="0.1" />
+                <line x1="6" y1="5" x2="13" y2="0.33" stroke="#ef4444" stroke-width="0.1" />
+
+                <circle cx="2" cy="8" r="0.2" fill="#1e40af" />
+                <text x="1.5" y="8.5" font-family="sans-serif" font-size="0.6" font-weight="bold">A</text>
+                
+                <circle cx="6" cy="2" r="0.2" fill="#1e40af" />
+                <text x="6.3" y="2.2" font-family="sans-serif" font-size="0.6" font-weight="bold">B</text>
+                
+                <circle cx="10" cy="8" r="0.2" fill="#1e40af" />
+                <text x="10.3" y="8.5" font-family="sans-serif" font-weight="bold" font-size="0.6">C</text>
+
+                <circle cx="6" cy="5" r="0.15" fill="#f59e0b" />
+                <text x="6.3" y="5" font-family="sans-serif" font-weight="bold" fill="#f59e0b" font-size="0.5">V(6,5)</text>
+            </svg>
+        </div>
+
+        <details>
+            <summary>Part A: The Nearest Neighbor</summary>
+            <div class="interactive-content">
+                <div class="step">
+                    A new housing development is built at the coordinate \( (3, 5) \). Look at the graph above. 
+                    <br>Because the coordinate \( (3, 5) \) falls inside the cell bounded by the red lines on the left, the closest chemical plant to the new housing development is Site 
+                    <select class="inline-blank w-sm" data-answer="A">
+                        <option value=""></option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select>.
+                </div>
+                <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
+            </div>
+        </details>
+
+        <details>
+            <summary>Part B: The Edge Equation (Perpendicular Bisector)</summary>
+            <div class="interactive-content">
+                <div class="step">
+                    Let's find the equation of the boundary line between Site A and Site B. 
+                    <br><strong>1. Midpoint:</strong> The midpoint between \(A(2, 8)\) and \(B(6, 2)\) is \( \left(\frac{2+6}{2}, \frac{8+2}{2}\right) = (4, 5) \).
+                    <br><strong>2. Gradient (Slope) of AB:</strong> \( m = \frac{2-8}{6-2} = \frac{-6}{4} = -1.5 \).
+                    <br><strong>3. Perpendicular Gradient:</strong> The boundary line is perpendicular, so its slope is the negative reciprocal of -1.5. 
+                    <br>The perpendicular slope is <input type="text" class="inline-blank w-md" data-answer="2/3"> <em>(Hint: flip 3/2)</em>.
+                </div>
+                <div class="step">
+                    <strong>4. Final Equation:</strong> Plugging the slope and midpoint into \(y - y_1 = m(x - x_1)\), we get:
+                    <div class="calc-box">y - 5 = \(\frac{2}{3}\)(x - 4)</div>
+                </div>
+                <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
+            </div>
+        </details>
+
+        <details>
+            <summary>Part C: The Toxic Vertex Dilemma</summary>
+            <div class="interactive-content">
+                <div class="step">
+                    The city wants to build a park that is <strong>equally distant</strong> from all three chemical plants to minimize complaints. 
+                    They must place it at the vertex \( V(6, 5) \).
+                    <br><br>
+                    <strong>What if?</strong> If the city calculates the distance from \(V(6,5)\) to Site A, the distance will be 
+                    <select class="inline-blank w-lg" data-answer="exactly the same as">
+                        <option value=""></option>
+                        <option value="greater than">greater than</option>
+                        <option value="less than">less than</option>
+                        <option value="exactly the same as">exactly the same as</option>
+                    </select> the distance from \(V(6,5)\) to Site C. 
+                    <br><em>(Hint: This is the defining property of a Voronoi vertex!)</em>
+                </div>
+                <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
+            </div>
+        </details>
+    </section>
+
+    <section class="section-card">
+        <h2>🌊 Guided Practice 2: The Tidal Wave</h2>
+        <div class="context-box">
+            The depth of water, \( d \), in a harbor (in meters) over a 24-hour period is modeled by the function:
+            <br><br>
+            <div style="text-align: center; font-weight: bold; font-size: 1.2em;">
+                \( d(t) = a \sin(b(t - c)) + d \)
+            </div>
+            <br>
+            At high tide, the water depth is <strong>14 meters</strong>. At low tide, the depth is <strong>4 meters</strong>. 
+            The time between one high tide and the very next high tide is exactly <strong>12 hours</strong>.
+        </div>
+
+        <details>
+            <summary>Part A: The Principal Axis (\(d\))</summary>
+            <div class="interactive-content">
+                <div class="step">
+                    The principal axis is the average water level (the line right in the middle of the wave).
+                    <br>
+                    \( d = \frac{\text{Max} + \text{Min}}{2} \)
+                    <br>
+                    \( d = \frac{14 + 4}{2} = \) <input type="text" class="inline-blank w-sm" data-answer="9"> meters.
+                </div>
+                <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
+            </div>
+        </details>
+
+        <details>
+            <summary>Part B: The Amplitude (\(a\))</summary>
+            <div class="interactive-content">
+                <div class="step">
+                    The amplitude is the distance the wave rises above the middle line.
+                    <br>
+                    \( a = \frac{\text{Max} - \text{Min}}{2} \)
+                    <br>
+                    \( a = \frac{14 - 4}{2} = \) <input type="text" class="inline-blank w-sm" data-answer="5"> meters.
+                </div>
+                <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
+            </div>
+        </details>
+
+        <details>
+            <summary>Part C: The Period and \(b\) Value</summary>
+            <div class="interactive-content">
+                <div class="step">
+                    The problem states that the time between high tides is <strong>12 hours</strong>. Therefore, the <strong>Period</strong> is 
+                    <input type="text" class="inline-blank w-sm" data-answer="12"> hours.
+                </div>
+                <div class="step">
+                    To find the mathematical value for \(b\) to put into the equation, we use the formula:
+                    <br>
+                    \( b = \frac{360^\circ}{\text{Period}} \)
+                    <br>
+                    \( b = \frac{360^\circ}{12} = \) <input type="text" class="inline-blank w-sm" data-answer="30"> \(^\circ\).
+                </div>
+                <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
+            </div>
+        </details>
+
+        <details>
+            <summary>Part D: GDC Application (What If?)</summary>
+            <div class="interactive-content">
+                <div class="step">
+                    The final equation is: <div class="calc-box">d(t) = 5 &times; sin(30(t - c)) + 9</div>
+                    <br><br>
+                    <strong>What if?</strong> If a boat needs a minimum water depth of <strong>10 meters</strong> to safely enter the harbor, how would you find the safe times on your TI-Nspire?
+                    <br><br>
+                    <strong>Step 1:</strong> Graph the wave \( f1(x) = 5 \sin(30(x - c)) + 9 \).
+                    <br><strong>Step 2:</strong> Graph the horizontal line \( f2(x) = \) <input type="text" class="inline-blank w-sm" data-answer="10">.
+                    <br><strong>Step 3:</strong> Use the 
+                    <select class="inline-blank w-lg" data-answer="intersection">
+                        <option value=""></option>
+                        <option value="maximum">Maximum</option>
+                        <option value="minimum">Minimum</option>
+                        <option value="intersection">Intersection</option>
+                    </select> tool to find the exact times where the wave crosses above the safe depth!
+                </div>
+                <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
+            </div>
+        </details>
+    </section>
+
+</div>
+
+<div id="dev-autofill" onclick="autofillAll()"></div>
+
+<script>
+    // Smart Checker Function
+    function checkAnswers(btnElement) {
+        let container = btnElement.parentElement;
+        let inputs = container.querySelectorAll('.inline-blank');
+        
+        inputs.forEach(input => {
+            let studentAnswerRaw = input.value.trim();
+            let correctAnswerRaw = input.getAttribute('data-answer');
+            
+            // Reset classes
+            input.classList.remove('correct', 'incorrect');
+            
+            if (studentAnswerRaw === "") {
+                return; // Do nothing if empty
+            }
+
+            // Clean the strings (remove spaces, fractions handling)
+            let studentAnswer = studentAnswerRaw.toLowerCase().replace(/\s/g, '');
+            let correctAnswer = correctAnswerRaw.toLowerCase().replace(/\s/g, '');
+            
+            // Allow for fractional inputs (e.g. "2/3")
+            if (correctAnswer === "2/3" && (studentAnswer === "2/3" || studentAnswer === "0.66" || studentAnswer === "0.67" || studentAnswer === ".66" || studentAnswer === ".67")) {
+                input.classList.add('correct');
+                return;
+            }
+
+            // Standard numeric check
+            let isNum = !isNaN(studentAnswer) && studentAnswer !== "" && !isNaN(correctAnswer);
+
+            if (isNum) {
+                if (Math.abs(parseFloat(studentAnswer) - parseFloat(correctAnswer)) < 0.015) {
+                    input.classList.add('correct');
+                } else {
+                    input.classList.add('incorrect');
+                }
+            } else {
+                // Dropdown / String check
+                if (studentAnswer === correctAnswer) {
+                    input.classList.add('correct');
+                } else {
+                    input.classList.add('incorrect');
+                }
+            }
+        });
+    }
+
+    // Secret Autofill Function
+    function autofillAll() {
+        let allInputs = document.querySelectorAll('.inline-blank');
+        allInputs.forEach(input => {
+            input.value = input.getAttribute('data-answer');
+            input.classList.remove('incorrect');
+            input.classList.add('correct');
+        });
+    }
+</script>
+
+</body>
+</html>

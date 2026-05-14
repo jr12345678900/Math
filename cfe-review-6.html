@@ -15,14 +15,13 @@
 
 <style>
     :root {
-        --primary: #4f46e5; /* Indigo */
-        --secondary: #4338ca; /* Teal-Indigo */
+        --primary: #4f46e5; 
+        --secondary: #4338ca; 
         --bg-color: #f8fafc;
         --card-bg: #ffffff;
         --text-main: #334155;
         --success: #10b981;
         --danger: #ef4444;
-        --highlight: #fef08a; /* Amber-100 */
     }
     
     body { font-family: 'Inter', 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 20px; line-height: 1.8; font-size: 110%; }
@@ -56,10 +55,11 @@
     }
     
     .inline-blank:focus { border-bottom: 2px solid #2563eb; background: #eff6ff; }
+    .w-xs { width: 35px; }
     .w-sm { width: 55px; }
     .w-md { width: 95px; }
     .w-lg { width: 150px; }
-    .w-xl { width: 200px; }
+    .w-xl { width: 220px; }
 
     /* Custom Dropdown Styling */
     select.inline-blank {
@@ -125,22 +125,21 @@
             </select>. A vertex is equidistant from all three surrounding sites.
         </div>
         <div class="step">
-            <strong>2. Sinusoidal Models \( y = a \sin(b(x-c)) + d \):</strong> 
-            <br>• The Principal Axis (\(d\)) is the center line. It is found by calculating the 
+            <strong>2. Sinusoidal Models \( y = a \sin(bx) + d \):</strong> 
+            <br>• The <strong>Principal Axis</strong> (\(d\)) is the center line. It is found by calculating the 
             <select class="inline-blank w-lg" data-answer="average">
                 <option value=""></option>
                 <option value="difference">difference</option>
                 <option value="average">average (mean)</option>
                 <option value="product">product</option>
             </select> of the Maximum and Minimum values.
-            <br>• The Amplitude (\(a\)) is the distance from the center to the peak. You find it by doing: \( (Max - Min) \) divided by 
-            <select class="inline-blank w-sm" data-answer="2">
-                <option value=""></option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="360">360</option>
-            </select>.
-            <br>• The Period is how long it takes to repeat one full wave. The formula to find \(b\) is: \( b = \frac{360^\circ}{\text{Period}} \).
+            <br>• The <strong>Amplitude</strong> (\(a\)) is the distance from the center to the peak. You find it by doing: \( \frac{\text{Max} - \text{Min}}{2} \).
+            <br>• The <strong>Period</strong> is how long it takes to repeat one full wave. The formula to find the \(b\) value is: \( b = \frac{360^\circ}{\text{Period}} \).
+        </div>
+        <div class="step">
+            <strong>3. Choosing the Trig Function:</strong> 
+            <br>• If the graph starts at the middle and goes UP, use <strong>Positive Sine</strong>.
+            <br>• If the graph starts at the Maximum Peak and goes DOWN, use <strong>Positive Cosine</strong>.
         </div>
         <button class="check-btn" onclick="checkAnswers(this)">Check Section</button>
     </section>
@@ -154,25 +153,39 @@
         </div>
 
         <div class="svg-container">
-            <svg width="400" height="300" viewBox="-2 -2 14 12" style="background: #f8fafc; border: 1px solid #cbd5e1;">
-                <path d="M0,0 L12,0 M0,2 L12,2 M0,4 L12,4 M0,6 L12,6 M0,8 L12,8 M0,10 L12,10" stroke="#e2e8f0" stroke-width="0.05" />
-                <path d="M0,0 L0,12 M2,0 L2,12 M4,0 L4,12 M6,0 L6,12 M8,0 L8,12 M10,0 L10,12 M12,0 L12,12" stroke="#e2e8f0" stroke-width="0.05" />
+            <svg width="100%" height="350" viewBox="-2 -2 14 14" style="background: #f8fafc; border: 1px solid #cbd5e1; max-width: 500px;">
+                <g stroke="#cbd5e1" stroke-width="0.05">
+                    <line x1="-2" y1="12" x2="14" y2="12" />
+                    <line x1="-2" y1="10" x2="14" y2="10" />
+                    <line x1="-2" y1="8" x2="14" y2="8" />
+                    <line x1="-2" y1="6" x2="14" y2="6" />
+                    <line x1="-2" y1="4" x2="14" y2="4" />
+                    <line x1="-2" y1="2" x2="14" y2="2" />
+                    <line x1="-2" y1="-2" x2="14" y2="-2" />
+                    <line x1="-2" y1="-2" x2="-2" y2="14" />
+                    <line x1="2" y1="-2" x2="2" y2="14" />
+                    <line x1="4" y1="-2" x2="4" y2="14" />
+                    <line x1="6" y1="-2" x2="6" y2="14" />
+                    <line x1="8" y1="-2" x2="8" y2="14" />
+                    <line x1="10" y1="-2" x2="10" y2="14" />
+                    <line x1="12" y1="-2" x2="12" y2="14" />
+                    <line x1="14" y1="-2" x2="14" y2="14" />
+                </g>
                 
-                <line x1="6" y1="12" x2="6" y2="5" stroke="#ef4444" stroke-width="0.1" /> 
-                <line x1="6" y1="5" x2="-1" y2="0.33" stroke="#ef4444" stroke-width="0.1" />
-                <line x1="6" y1="5" x2="13" y2="0.33" stroke="#ef4444" stroke-width="0.1" />
+                <line x1="-2" y1="0" x2="14" y2="0" stroke="#1e293b" stroke-width="0.15" /> <line x1="0" y1="-2" x2="0" y2="14" stroke="#1e293b" stroke-width="0.15" /> <text x="13.5" y="-0.5" font-family="sans-serif" font-size="0.6" font-weight="bold">x</text>
+                <text x="0.3" y="13.5" font-family="sans-serif" font-size="0.6" font-weight="bold">y</text>
 
-                <circle cx="2" cy="8" r="0.2" fill="#1e40af" />
-                <text x="1.5" y="8.5" font-family="sans-serif" font-size="0.6" font-weight="bold">A</text>
+                <line x1="6" y1="14" x2="6" y2="6.333" stroke="#ef4444" stroke-width="0.15" /> <line x1="6" y1="6.333" x2="-2" y2="1" stroke="#ef4444" stroke-width="0.15" /> <line x1="6" y1="6.333" x2="14" y2="1" stroke="#ef4444" stroke-width="0.15" /> <circle cx="2" cy="8" r="0.25" fill="#1e40af" />
+                <text x="1.5" y="8.8" font-family="sans-serif" font-size="0.8" font-weight="bold" fill="#1e40af">A</text>
                 
-                <circle cx="6" cy="2" r="0.2" fill="#1e40af" />
-                <text x="6.3" y="2.2" font-family="sans-serif" font-size="0.6" font-weight="bold">B</text>
+                <circle cx="6" cy="2" r="0.25" fill="#1e40af" />
+                <text x="6.4" y="2.2" font-family="sans-serif" font-size="0.8" font-weight="bold" fill="#1e40af">B</text>
                 
-                <circle cx="10" cy="8" r="0.2" fill="#1e40af" />
-                <text x="10.3" y="8.5" font-family="sans-serif" font-weight="bold" font-size="0.6">C</text>
+                <circle cx="10" cy="8" r="0.25" fill="#1e40af" />
+                <text x="10.5" y="8.8" font-family="sans-serif" font-weight="bold" font-size="0.8" fill="#1e40af">C</text>
 
-                <circle cx="6" cy="5" r="0.15" fill="#f59e0b" />
-                <text x="6.3" y="5" font-family="sans-serif" font-weight="bold" fill="#f59e0b" font-size="0.5">V(6,5)</text>
+                <circle cx="6" cy="6.333" r="0.2" fill="#f59e0b" />
+                <text x="6.4" y="6.8" font-family="sans-serif" font-weight="bold" fill="#d97706" font-size="0.7">V</text>
             </svg>
         </div>
 
@@ -180,8 +193,8 @@
             <summary>Part A: The Nearest Neighbor</summary>
             <div class="interactive-content">
                 <div class="step">
-                    A new housing development is built at the coordinate \( (3, 5) \). Look at the graph above. 
-                    <br>Because the coordinate \( (3, 5) \) falls inside the cell bounded by the red lines on the left, the closest chemical plant to the new housing development is Site 
+                    A new housing development is built at the coordinate \( (3, 5) \). 
+                    <br>Looking at the boundaries on the graph, the closest chemical plant to the new housing development is Site 
                     <select class="inline-blank w-sm" data-answer="A">
                         <option value=""></option>
                         <option value="A">A</option>
@@ -197,35 +210,47 @@
             <summary>Part B: The Edge Equation (Perpendicular Bisector)</summary>
             <div class="interactive-content">
                 <div class="step">
-                    Let's find the equation of the boundary line between Site A and Site B. 
+                    Let's find the exact equation of the red boundary line between Site A and Site B. 
                     <br><strong>1. Midpoint:</strong> The midpoint between \(A(2, 8)\) and \(B(6, 2)\) is \( \left(\frac{2+6}{2}, \frac{8+2}{2}\right) = (4, 5) \).
                     <br><strong>2. Gradient (Slope) of AB:</strong> \( m = \frac{2-8}{6-2} = \frac{-6}{4} = -1.5 \).
                     <br><strong>3. Perpendicular Gradient:</strong> The boundary line is perpendicular, so its slope is the negative reciprocal of -1.5. 
-                    <br>The perpendicular slope is <input type="text" class="inline-blank w-md" data-answer="2/3"> <em>(Hint: flip 3/2)</em>.
+                    <br>The perpendicular slope is <input type="text" class="inline-blank w-xs" data-answer="2/3">.
                 </div>
                 <div class="step">
-                    <strong>4. Final Equation:</strong> Plugging the slope and midpoint into \(y - y_1 = m(x - x_1)\), we get:
-                    <div class="calc-box">y - 5 = \(\frac{2}{3}\)(x - 4)</div>
+                    <strong>4. Final Equation:</strong> Using the point-slope form \( y - y_1 = m(x - x_1) \), fill in the correct values using the midpoint and new slope:
+                    <br><br>
+                    <div style="font-size: 1.2em; text-align: center;">
+                        \( y - \) <input type="text" class="inline-blank w-xs" data-answer="5"> 
+                        \( = \) <input type="text" class="inline-blank w-xs" data-answer="2/3"> 
+                        \( ( x - \) <input type="text" class="inline-blank w-xs" data-answer="4"> \( ) \)
+                    </div>
                 </div>
                 <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
             </div>
         </details>
 
         <details>
-            <summary>Part C: The Toxic Vertex Dilemma</summary>
+            <summary>Part C: The Boundary Line Property (What If?)</summary>
             <div class="interactive-content">
                 <div class="step">
-                    The city wants to build a park that is <strong>equally distant</strong> from all three chemical plants to minimize complaints. 
-                    They must place it at the vertex \( V(6, 5) \).
+                    <strong>What if?</strong> A playground is built exactly ON the red boundary line separating Site A and Site B. 
                     <br><br>
-                    <strong>What if?</strong> If the city calculates the distance from \(V(6,5)\) to Site A, the distance will be 
-                    <select class="inline-blank w-lg" data-answer="exactly the same as">
+                    Based on the properties of a perpendicular bisector, the playground is 
+                    <select class="inline-blank w-lg" data-answer="equidistant from">
+                        <option value=""></option>
+                        <option value="closer to A">closer to A</option>
+                        <option value="closer to B">closer to B</option>
+                        <option value="equidistant from">equidistant from</option>
+                    </select> Site A and Site B.
+                </div>
+                <div class="step">
+                    Similarly, if a park is built at Vertex V, the distance from V to Site A will be 
+                    <select class="inline-blank w-xl" data-answer="exactly the same as">
                         <option value=""></option>
                         <option value="greater than">greater than</option>
                         <option value="less than">less than</option>
                         <option value="exactly the same as">exactly the same as</option>
-                    </select> the distance from \(V(6,5)\) to Site C. 
-                    <br><em>(Hint: This is the defining property of a Voronoi vertex!)</em>
+                    </select> the distance from V to Site C. 
                 </div>
                 <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
             </div>
@@ -235,57 +260,68 @@
     <section class="section-card">
         <h2>🌊 Guided Practice 2: The Tidal Wave</h2>
         <div class="context-box">
-            The depth of water, \( d \), in a harbor (in meters) over a 24-hour period is modeled by the function:
-            <br><br>
-            <div style="text-align: center; font-weight: bold; font-size: 1.2em;">
-                \( d(t) = a \sin(b(t - c)) + d \)
-            </div>
+            The depth of water in a harbor over a 24-hour period is modeled by a sinusoidal function.
             <br>
-            At high tide, the water depth is <strong>14 meters</strong>. At low tide, the depth is <strong>4 meters</strong>. 
+            At high tide (the maximum), the water depth is <strong>14 meters</strong>. <br>
+            At low tide (the minimum), the depth is <strong>4 meters</strong>. <br>
             The time between one high tide and the very next high tide is exactly <strong>12 hours</strong>.
         </div>
 
         <details>
-            <summary>Part A: The Principal Axis (\(d\))</summary>
+            <summary>Part A: The Principal Axis & Amplitude</summary>
             <div class="interactive-content">
                 <div class="step">
-                    The principal axis is the average water level (the line right in the middle of the wave).
+                    <strong>1. The Principal Axis (\(d\)):</strong> This is the average water level.
                     <br>
                     \( d = \frac{\text{Max} + \text{Min}}{2} \)
                     <br>
-                    \( d = \frac{14 + 4}{2} = \) <input type="text" class="inline-blank w-sm" data-answer="9"> meters.
+                    \( d = \frac{ \text{ [ } \input{text} class="inline-blank w-xs" data-answer="14"> \text{ ] } + \text{ [ } \input{text} class="inline-blank w-xs" data-answer="4"> \text{ ] } }{2} = 9 \) meters.
                 </div>
-                <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
-            </div>
-        </details>
-
-        <details>
-            <summary>Part B: The Amplitude (\(a\))</summary>
-            <div class="interactive-content">
                 <div class="step">
-                    The amplitude is the distance the wave rises above the middle line.
+                    <strong>2. The Amplitude (\(a\)):</strong> This is the height of the wave above the middle line.
                     <br>
                     \( a = \frac{\text{Max} - \text{Min}}{2} \)
                     <br>
-                    \( a = \frac{14 - 4}{2} = \) <input type="text" class="inline-blank w-sm" data-answer="5"> meters.
+                    \( a = \frac{ \text{ [ } \input{text} class="inline-blank w-xs" data-answer="14"> \text{ ] } - \text{ [ } \input{text} class="inline-blank w-xs" data-answer="4"> \text{ ] } }{2} = 5 \) meters.
                 </div>
                 <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
             </div>
         </details>
 
         <details>
-            <summary>Part C: The Period and \(b\) Value</summary>
+            <summary>Part B: The Period and \(b\) Value</summary>
             <div class="interactive-content">
                 <div class="step">
-                    The problem states that the time between high tides is <strong>12 hours</strong>. Therefore, the <strong>Period</strong> is 
-                    <input type="text" class="inline-blank w-sm" data-answer="12"> hours.
+                    The problem states that the time between two high tides is 12 hours. Therefore, the <strong>Period</strong> is 12 hours.
                 </div>
                 <div class="step">
                     To find the mathematical value for \(b\) to put into the equation, we use the formula:
                     <br>
                     \( b = \frac{360^\circ}{\text{Period}} \)
                     <br>
-                    \( b = \frac{360^\circ}{12} = \) <input type="text" class="inline-blank w-sm" data-answer="30"> \(^\circ\).
+                    \( b = \frac{360^\circ}{ \text{ [ } \input{text} class="inline-blank w-xs" data-answer="12"> \text{ ] } } = 30^\circ \).
+                </div>
+                <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
+            </div>
+        </details>
+
+        <details>
+            <summary>Part C: Choosing the Function</summary>
+            <div class="interactive-content">
+                <div class="step">
+                    Assume that the harbor is at <strong>High Tide (Maximum)</strong> at time \( t = 0 \). 
+                    <br>Because the graph starts at the very top and goes down, the correct mathematical model to use is 
+                    <select class="inline-blank w-lg" data-answer="positive cosine">
+                        <option value=""></option>
+                        <option value="positive sine">Positive Sine</option>
+                        <option value="negative sine">Negative Sine</option>
+                        <option value="positive cosine">Positive Cosine</option>
+                        <option value="negative cosine">Negative Cosine</option>
+                    </select>.
+                </div>
+                <div class="step">
+                    Therefore, the final equation for the harbor depth is:
+                    <div class="calc-box">d(t) = 5 cos(30t) + 9</div>
                 </div>
                 <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
             </div>
@@ -295,13 +331,11 @@
             <summary>Part D: GDC Application (What If?)</summary>
             <div class="interactive-content">
                 <div class="step">
-                    The final equation is: <div class="calc-box">d(t) = 5 &times; sin(30(t - c)) + 9</div>
+                    <strong>What if?</strong> A large shipping boat needs a minimum water depth of <strong>10 meters</strong> to safely enter the harbor. How would you find the safe times on your TI-Nspire?
                     <br><br>
-                    <strong>What if?</strong> If a boat needs a minimum water depth of <strong>10 meters</strong> to safely enter the harbor, how would you find the safe times on your TI-Nspire?
-                    <br><br>
-                    <strong>Step 1:</strong> Graph the wave \( f1(x) = 5 \sin(30(x - c)) + 9 \).
-                    <br><strong>Step 2:</strong> Graph the horizontal line \( f2(x) = \) <input type="text" class="inline-blank w-sm" data-answer="10">.
-                    <br><strong>Step 3:</strong> Use the 
+                    <strong>Step 1:</strong> Graph the wave \( f1(x) = 5 \cos(30x) + 9 \).
+                    <br><strong>Step 2:</strong> Graph the horizontal line \( f2(x) = \) <input type="text" class="inline-blank w-xs" data-answer="10">.
+                    <br><strong>Step 3:</strong> Use the GDC 
                     <select class="inline-blank w-lg" data-answer="intersection">
                         <option value=""></option>
                         <option value="maximum">Maximum</option>
@@ -335,7 +369,7 @@
                 return; // Do nothing if empty
             }
 
-            // Clean the strings (remove spaces, fractions handling)
+            // Clean the strings (remove spaces)
             let studentAnswer = studentAnswerRaw.toLowerCase().replace(/\s/g, '');
             let correctAnswer = correctAnswerRaw.toLowerCase().replace(/\s/g, '');
             

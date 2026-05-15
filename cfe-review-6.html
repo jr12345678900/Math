@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CFE Review 6: Interactive Notes</title>
+<title>CFE Practice 6: Independent Review</title>
 
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -15,8 +15,8 @@
 
 <style>
     :root {
-        --primary: #4f46e5; 
-        --secondary: #4338ca; 
+        --primary: #b45309; /* Amber/Orange */
+        --secondary: #d97706; 
         --bg-color: #f8fafc;
         --card-bg: #ffffff;
         --text-main: #334155;
@@ -28,14 +28,14 @@
     .lesson-container { max-width: 900px; margin: auto; }
     
     /* Header */
-    .hero-header { background: linear-gradient(135deg, #312e81, #4f46e5); color: white; padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 30px; box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.2); }
+    .hero-header { background: linear-gradient(135deg, #78350f, #b45309); color: white; padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 30px; box-shadow: 0 10px 15px -3px rgba(180, 83, 9, 0.2); }
     .hero-header h1 { margin: 0; font-size: 2.3em; letter-spacing: -0.5px; }
-    .badge { display: inline-block; background: #fbbf24; color: #1e293b; padding: 4px 12px; border-radius: 20px; font-size: 0.85em; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; }
+    .badge { display: inline-block; background: #fef3c7; color: #78350f; padding: 4px 12px; border-radius: 20px; font-size: 0.85em; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; }
     
     /* Sections */
     .section-card { background: var(--card-bg); padding: 35px; border-radius: 12px; margin-bottom: 35px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-top: 5px solid var(--secondary); }
-    .section-card h2 { margin-top: 0; color: var(--primary); font-size: 1.6em; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-    .context-box { background: #eef2ff; padding: 15px 20px; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 20px; color: #1e3a8a; }
+    .section-card h2 { margin-top: 0; color: var(--primary); font-size: 1.6em; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+    .context-box { background: #fffbeb; padding: 15px 20px; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 20px; color: #78350f; }
 
     /* Interactive Inline Inputs & Dropdowns */
     .inline-blank {
@@ -56,10 +56,9 @@
     
     .inline-blank:focus { border-bottom: 2px solid #2563eb; background: #eff6ff; }
     .w-xs { width: 45px; }
-    .w-sm { width: 55px; }
+    .w-sm { width: 65px; }
     .w-md { width: 95px; }
-    .w-lg { width: 150px; }
-    .w-xl { width: 220px; }
+    .w-lg { width: 160px; }
 
     /* Custom Dropdown Styling */
     select.inline-blank {
@@ -71,11 +70,6 @@
         background-position: right center;
         background-size: 10px auto;
     }
-
-    /* HTML Math Fractions */
-    .html-frac { display: inline-block; vertical-align: middle; text-align: center; margin: 0 5px; }
-    .html-num { display: block; border-bottom: 2px solid var(--text-main); padding-bottom: 3px; }
-    .html-den { display: block; padding-top: 3px; }
 
     /* Validation Colors */
     .correct { border-bottom: 2px solid var(--success) !important; color: var(--success); }
@@ -106,61 +100,32 @@
 <div class="lesson-container">
 
     <header class="hero-header">
-        <span class="badge"> The Finale</span>
-        <h1>Interactive Notes: CFE Review 6</h1>
-        <p>Voronoi Diagrams & Sinusoidal Functions</p>
+        <span class="badge">Independent Practice</span>
+        <h1>CFE Mastery: Review 6</h1>
+        <p>Apply your skills: Voronoi Boundaries & Sinusoidal Functions</p>
     </header>
 
     <section class="section-card">
-        <h2>📚 The Interactive Cheat Sheet</h2>
-        <div class="step">
-            <strong>1. Voronoi Diagrams:</strong> A Voronoi diagram divides a space into regions (cells) based on the closest distance to a specific point (a "site"). The boundaries (edges) between these regions are always the 
-            <select class="inline-blank w-xl" data-answer="perpendicular bisectors">
-                <option value=""></option>
-                <option value="parallel lines">parallel lines</option>
-                <option value="perpendicular bisectors">perpendicular bisectors</option>
-                <option value="tangents">tangents</option>
-            </select> of the line segment connecting two sites. 
-            <br>• <em>Intersection points</em> where three boundaries meet are called 
-            <select class="inline-blank w-lg" data-answer="vertices">
-                <option value=""></option>
-                <option value="vertices">vertices</option>
-                <option value="midpoints">midpoints</option>
-                <option value="origins">origins</option>
-            </select>. A vertex is equidistant from all three surrounding sites.
-        </div>
-        <div class="step">
-            <strong>2. Sinusoidal Models \( y = a \sin(bx) + d \):</strong> 
-            <br>• The <strong>Principal Axis</strong> (\(d\)) is the center line. It is found by calculating the 
-            <select class="inline-blank w-lg" data-answer="average">
-                <option value=""></option>
-                <option value="difference">difference</option>
-                <option value="average">average (mean)</option>
-                <option value="product">product</option>
-            </select> of the Maximum and Minimum values.
-            <br>• The <strong>Amplitude</strong> (\(a\)) is the distance from the center to the peak. You find it by doing: \( \frac{\text{Max} - \text{Min}}{2} \).
-            <br>• The <strong>Period</strong> is how long it takes to repeat one full wave. The formula to find the \(b\) value is: \( b = \frac{360^\circ}{\text{Period}} \).
-        </div>
-        <div class="step">
-            <strong>3. Choosing the Trig Function:</strong> 
-            <br>• If the graph starts at the middle and goes UP, use <strong>Positive Sine</strong>.
-            <br>• If the graph starts at the Maximum Peak and goes DOWN, use <strong>Positive Cosine</strong>.
-        </div>
-        <button class="check-btn" onclick="checkAnswers(this)">Check Section</button>
-    </section>
-
-    <section class="section-card">
-        <h2>🗺️ Guided Practice 1: Toxic Waste & Voronoi</h2>
+        <h2>🗺️ Practice 1: Delivery Drone Zones</h2>
         <div class="context-box">
-            A city is mapping the locations of three chemical plants (Sites A, B, and C). 
-            They create a Voronoi diagram to determine which plant is closest to any given house in the city. 
-            The coordinates are: \( A(2, 8) \), \( B(6, 2) \), and \( C(10, 8) \).
+            A logistics company uses a Voronoi diagram to map out delivery zones for four drone dispatch stations: 
+            <strong>A(2, 6)</strong>, <strong>B(6, 2)</strong>, <strong>C(10, 4)</strong>, and <strong>D(6, 10)</strong>.
+            <br>The Voronoi diagram below shows the resulting boundaries and two distinct vertices (\(V_1\) and \(V_2\)).
         </div>
 
         <div class="svg-container">
             <svg width="100%" height="350" viewBox="-2 -2 16 16" style="background: #f8fafc; border: 1px solid #cbd5e1; max-width: 500px;">
                 <g stroke="#cbd5e1" stroke-width="0.05">
-                    <line x1="-2" y1="12" x2="14" y2="12" /> <line x1="-2" y1="10" x2="14" y2="10" /> <line x1="-2" y1="8" x2="14" y2="8" />   <line x1="-2" y1="6" x2="14" y2="6" />   <line x1="-2" y1="4" x2="14" y2="4" />   <line x1="-2" y1="2" x2="14" y2="2" />   <line x1="-2" y1="0" x2="14" y2="0" />   <line x1="0" y1="-2" x2="0" y2="14" />
+                    <line x1="-2" y1="12" x2="14" y2="12" />
+                    <line x1="-2" y1="10" x2="14" y2="10" />
+                    <line x1="-2" y1="8" x2="14" y2="8" />
+                    <line x1="-2" y1="6" x2="14" y2="6" />
+                    <line x1="-2" y1="4" x2="14" y2="4" />
+                    <line x1="-2" y1="2" x2="14" y2="2" />
+                    <line x1="-2" y1="0" x2="14" y2="0" />
+                    <line x1="-2" y1="-2" x2="14" y2="-2" />
+                    
+                    <line x1="0" y1="-2" x2="0" y2="14" />
                     <line x1="2" y1="-2" x2="2" y2="14" />
                     <line x1="4" y1="-2" x2="4" y2="14" />
                     <line x1="6" y1="-2" x2="6" y2="14" />
@@ -172,82 +137,86 @@
                 <line x1="-2" y1="12" x2="14" y2="12" stroke="#1e293b" stroke-width="0.15" /> <line x1="0" y1="-2" x2="0" y2="14" stroke="#1e293b" stroke-width="0.15" /> <text x="13.5" y="11.5" font-family="sans-serif" font-size="0.6" font-weight="bold">x</text>
                 <text x="0.3" y="-0.5" font-family="sans-serif" font-size="0.6" font-weight="bold">y</text>
 
-                <line x1="6" y1="-2" x2="6" y2="5.667" stroke="#ef4444" stroke-width="0.12" /> <line x1="-2" y1="11" x2="6" y2="5.667" stroke="#ef4444" stroke-width="0.12" /> <line x1="14" y1="11" x2="6" y2="5.667" stroke="#ef4444" stroke-width="0.12" /> <circle cx="2" cy="4" r="0.25" fill="#1e40af" />
-                <text x="1.5" y="3.5" font-family="sans-serif" font-size="0.8" font-weight="bold" fill="#1e40af">A</text>
+                <line x1="6" y1="6" x2="6.5" y2="6" stroke="#ea580c" stroke-width="0.15" /> 
+                <line x1="6" y1="6" x2="0" y2="12" stroke="#ea580c" stroke-width="0.15" />
+                <line x1="6" y1="6" x2="0" y2="0" stroke="#ea580c" stroke-width="0.15" />
+                <line x1="6.5" y1="6" x2="9.5" y2="12" stroke="#ea580c" stroke-width="0.15" />
+                <line x1="6.5" y1="6" x2="14" y2="1" stroke="#ea580c" stroke-width="0.15" />
+
+                <circle cx="2" cy="6" r="0.25" fill="#1e40af" />
+                <text x="1.5" y="5.5" font-family="sans-serif" font-size="0.8" font-weight="bold" fill="#1e40af">A</text>
                 
                 <circle cx="6" cy="10" r="0.25" fill="#1e40af" />
-                <text x="6.4" y="9.8" font-family="sans-serif" font-size="0.8" font-weight="bold" fill="#1e40af">B</text>
+                <text x="6.4" y="10.8" font-family="sans-serif" font-size="0.8" font-weight="bold" fill="#1e40af">B</text>
                 
-                <circle cx="10" cy="4" r="0.25" fill="#1e40af" />
-                <text x="10.5" y="3.5" font-family="sans-serif" font-weight="bold" font-size="0.8" fill="#1e40af">C</text>
+                <circle cx="10" cy="8" r="0.25" fill="#1e40af" />
+                <text x="10.5" y="8.5" font-family="sans-serif" font-weight="bold" font-size="0.8" fill="#1e40af">C</text>
 
-                <circle cx="6" cy="5.667" r="0.2" fill="#f59e0b" />
-                <text x="6.4" y="5.4" font-family="sans-serif" font-weight="bold" fill="#d97706" font-size="0.7">V</text>
+                <circle cx="6" cy="2" r="0.25" fill="#1e40af" />
+                <text x="5.5" y="1.5" font-family="sans-serif" font-weight="bold" font-size="0.8" fill="#1e40af">D</text>
+
+                <circle cx="6" cy="6" r="0.15" fill="#ea580c" />
+                <text x="5" y="6.4" font-family="sans-serif" font-weight="bold" fill="#ea580c" font-size="0.6">V1</text>
+
+                <circle cx="6.5" cy="6" r="0.15" fill="#ea580c" />
+                <text x="6.8" y="6.4" font-family="sans-serif" font-weight="bold" fill="#ea580c" font-size="0.6">V2</text>
             </svg>
         </div>
 
         <details>
-            <summary>Part A: The Nearest Neighbor</summary>
+            <summary>Part A: Calculating the Boundary Equation</summary>
             <div class="interactive-content">
                 <div class="step">
-                    A new housing development is built at the coordinate \( (3, 5) \). 
-                    <br>Looking at the boundaries on the graph, the closest chemical plant to the new housing development is Site 
-                    <select class="inline-blank w-sm" data-answer="A">
+                    Your task is to mathematically find the equation of the boundary line separating <strong>Site A(2, 6)</strong> and <strong>Site B(6, 2)</strong>.
+                </div>
+                <div class="step">
+                    <strong>1. Find the Midpoint of AB:</strong><br>
+                    \( M = \left( \frac{2+6}{2}, \frac{6+2}{2} \right) = ( \) 
+                    <input type="text" class="inline-blank w-xs" data-answer="4"> , 
+                    <input type="text" class="inline-blank w-xs" data-answer="4"> \( ) \)
+                </div>
+                <div class="step">
+                    <strong>2. Find the Gradient of the line AB:</strong><br>
+                    \( m = \frac{2 - 6}{6 - 2} = \) <input type="text" class="inline-blank w-xs" data-answer="-1">
+                </div>
+                <div class="step">
+                    <strong>3. Find the Perpendicular Gradient:</strong><br>
+                    Flip the fraction and change the sign. The perpendicular slope is <input type="text" class="inline-blank w-xs" data-answer="1">.
+                </div>
+                <div class="step">
+                    <strong>4. Write the Final Equation:</strong><br>
+                    Use the point-slope formula \( y - y_1 = m(x - x_1) \).
+                    <br><br>
+                    \( y - \) <input type="text" class="inline-blank w-xs" data-answer="4"> 
+                    \( = \) <input type="text" class="inline-blank w-xs" data-answer="1"> 
+                    \( ( x - \) <input type="text" class="inline-blank w-xs" data-answer="4"> \( ) \)
+                </div>
+                <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
+            </div>
+        </details>
+
+        <details>
+            <summary>Part B: Vertex Analysis</summary>
+            <div class="interactive-content">
+                <div class="step">
+                    Look closely at Vertex \( V_1 \) on the diagram. Because it is the intersection of three specific boundaries, the coordinate for \( V_1 \) is perfectly equidistant from which three sites?
+                    <br><br>
+                    Sites 
+                    <select class="inline-blank w-xs" data-answer="A">
                         <option value=""></option>
                         <option value="A">A</option>
+                        <option value="C">C</option>
+                    </select> , 
+                    <select class="inline-blank w-xs" data-answer="B">
+                        <option value=""></option>
                         <option value="B">B</option>
                         <option value="C">C</option>
+                    </select> , and 
+                    <select class="inline-blank w-xs" data-answer="D">
+                        <option value=""></option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
                     </select>.
-                </div>
-                <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
-            </div>
-        </details>
-
-        <details>
-            <summary>Part B: The Edge Equation (Perpendicular Bisector)</summary>
-            <div class="interactive-content">
-                <div class="step">
-                    Let's find the exact equation of the red boundary line between Site A and Site B. 
-                    <br><strong>1. Midpoint:</strong> The midpoint between \(A(2, 8)\) and \(B(6, 2)\) is \( \left(\frac{2+6}{2}, \frac{8+2}{2}\right) = (4, 5) \).
-                    <br><strong>2. Gradient (Slope) of AB:</strong> \( m = \frac{2-8}{6-2} = \frac{-6}{4} = -1.5 \).
-                    <br><strong>3. Perpendicular Gradient:</strong> The boundary line is perpendicular, so its slope is the negative reciprocal of -1.5. 
-                    <br>The perpendicular slope is <input type="text" class="inline-blank w-xs" data-answer="2/3">.
-                </div>
-                <div class="step">
-                    <strong>4. Final Equation:</strong> Using the point-slope form \( y - y_1 = m(x - x_1) \), fill in the correct values using the midpoint and new slope:
-                    <br><br>
-                    <div style="font-size: 1.2em; text-align: center;">
-                        y &minus; <input type="text" class="inline-blank w-xs" data-answer="5"> 
-                        = <input type="text" class="inline-blank w-xs" data-answer="2/3"> 
-                        ( x &minus; <input type="text" class="inline-blank w-xs" data-answer="4"> )
-                    </div>
-                </div>
-                <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
-            </div>
-        </details>
-
-        <details>
-            <summary>Part C: The Boundary Line Property (What If?)</summary>
-            <div class="interactive-content">
-                <div class="step">
-                    <strong>What if?</strong> A playground is built exactly ON the red boundary line separating Site A and Site B. 
-                    <br><br>
-                    Based on the properties of a perpendicular bisector, the playground is 
-                    <select class="inline-blank w-lg" data-answer="equidistant from">
-                        <option value=""></option>
-                        <option value="closer to A">closer to A</option>
-                        <option value="closer to B">closer to B</option>
-                        <option value="equidistant from">equidistant from</option>
-                    </select> Site A and Site B.
-                </div>
-                <div class="step">
-                    Similarly, if a park is built at Vertex V, the distance from V to Site A will be 
-                    <select class="inline-blank w-xl" data-answer="exactly the same as">
-                        <option value=""></option>
-                        <option value="greater than">greater than</option>
-                        <option value="less than">less than</option>
-                        <option value="exactly the same as">exactly the same as</option>
-                    </select> the distance from V to Site C. 
                 </div>
                 <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
             </div>
@@ -255,75 +224,50 @@
     </section>
 
     <section class="section-card">
-        <h2>🌊 Guided Practice 2: The Tidal Wave</h2>
+        <h2>🎡 Practice 2: The Ferris Wheel</h2>
         <div class="context-box">
-            The depth of water in a harbor over a 24-hour period is modeled by a sinusoidal function.
-            <br>
-            At high tide (the maximum), the water depth is <strong>14 meters</strong>. <br>
-            At low tide (the minimum), the depth is <strong>4 meters</strong>. <br>
-            The time between one high tide and the very next high tide is exactly <strong>12 hours</strong>.
+            The height above ground, \( h \), of a passenger on a Ferris wheel is modeled by a sinusoidal function.
+            <br><br>
+            • The passenger boards the ride at the very bottom (the minimum height), which is <strong>2 meters</strong> above the ground at time \( t = 0 \). <br>
+            • The Ferris wheel reaches a maximum peak height of <strong>22 meters</strong>. <br>
+            • It takes exactly <strong>40 seconds</strong> for the wheel to complete one full revolution.
         </div>
 
         <details>
-            <summary>Part A: The Principal Axis & Amplitude</summary>
+            <summary>Part A: Principal Axis & Amplitude</summary>
             <div class="interactive-content">
                 <div class="step">
-                    <strong>1. The Principal Axis (\(d\)):</strong> This is the average water level.
-                    <br><br>
-                    \( d = \) 
-                    <span class="html-frac">
-                        <span class="html-num">
-                            <input type="text" class="inline-blank w-xs" data-answer="14"> + <input type="text" class="inline-blank w-xs" data-answer="4">
-                        </span>
-                        <span class="html-den">2</span>
-                    </span>
-                    \( = 9 \) meters.
+                    <strong>1. The Principal Axis (\(d\)):</strong><br>
+                    \( d = (\text{Max} + \text{Min}) \div 2 \)<br>
+                    \( d = ( \) 
+                    <input type="text" class="inline-blank w-xs" data-answer="22"> + 
+                    <input type="text" class="inline-blank w-xs" data-answer="2"> 
+                    \( ) \div 2 = \) <input type="text" class="inline-blank w-xs" data-answer="12"> meters.
                 </div>
                 <div class="step">
-                    <strong>2. The Amplitude (\(a\)):</strong> This is the height of the wave above the middle line.
-                    <br><br>
-                    \( a = \) 
-                    <span class="html-frac">
-                        <span class="html-num">
-                            <input type="text" class="inline-blank w-xs" data-answer="14"> &minus; <input type="text" class="inline-blank w-xs" data-answer="4">
-                        </span>
-                        <span class="html-den">2</span>
-                    </span>
-                    \( = 5 \) meters.
+                    <strong>2. The Amplitude (\(a\)):</strong><br>
+                    \( a = (\text{Max} - \text{Min}) \div 2 \)<br>
+                    \( a = ( \) 
+                    <input type="text" class="inline-blank w-xs" data-answer="22"> &minus; 
+                    <input type="text" class="inline-blank w-xs" data-answer="2"> 
+                    \( ) \div 2 = \) <input type="text" class="inline-blank w-xs" data-answer="10"> meters.
                 </div>
                 <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
             </div>
         </details>
 
         <details>
-            <summary>Part B: The Period and \(b\) Value</summary>
+            <summary>Part B: Period & Equation Setup</summary>
             <div class="interactive-content">
                 <div class="step">
-                    The problem states that the time between two high tides is 12 hours. Therefore, the <strong>Period</strong> is 12 hours.
+                    <strong>1. The \(b\) value:</strong><br>
+                    Because one full revolution takes 40 seconds, the period is 40. <br>
+                    \( b = 360^\circ \div \) <input type="text" class="inline-blank w-sm" data-answer="40"> = <input type="text" class="inline-blank w-xs" data-answer="9"> \(^\circ\).
                 </div>
                 <div class="step">
-                    To find the mathematical value for \(b\) to put into the equation, we use the formula:
-                    <br><br>
-                    \( b = \) 
-                    <span class="html-frac">
-                        <span class="html-num">360&deg;</span>
-                        <span class="html-den">
-                            <input type="text" class="inline-blank w-xs" data-answer="12">
-                        </span>
-                    </span>
-                    \( = 30^\circ \).
-                </div>
-                <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
-            </div>
-        </details>
-
-        <details>
-            <summary>Part C: Choosing the Function</summary>
-            <div class="interactive-content">
-                <div class="step">
-                    Assume that the harbor is at <strong>High Tide (Maximum)</strong> at time \( t = 0 \). 
-                    <br>Because the graph starts at the very top and goes down, the correct mathematical model to use is 
-                    <select class="inline-blank w-lg" data-answer="positive cosine">
+                    <strong>2. Choosing the Model:</strong><br>
+                    The passenger starts the ride at the <strong>minimum</strong> height and goes up. Therefore, the base model we must use is 
+                    <select class="inline-blank w-lg" data-answer="negative cosine">
                         <option value=""></option>
                         <option value="positive sine">Positive Sine</option>
                         <option value="negative sine">Negative Sine</option>
@@ -332,28 +276,39 @@
                     </select>.
                 </div>
                 <div class="step">
-                    Therefore, the final equation for the harbor depth is:
-                    <div class="calc-box">d(t) = 5 cos(30t) + 9</div>
+                    <strong>3. Final Equation:</strong><br>
+                    Putting it all together, the equation for the height is:<br>
+                    <div class="calc-box">
+                        \( h(t) = \) 
+                        <input type="text" class="inline-blank w-xs" data-answer="-10"> 
+                        \( \cos( \) 
+                        <input type="text" class="inline-blank w-xs" data-answer="9"> 
+                        \( t ) + \) 
+                        <input type="text" class="inline-blank w-xs" data-answer="12">
+                    </div>
                 </div>
                 <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
             </div>
         </details>
 
         <details>
-            <summary>Part D: GDC Application (What If?)</summary>
+            <summary>Part C: GDC Application (Intersections)</summary>
             <div class="interactive-content">
                 <div class="step">
-                    <strong>What if?</strong> A large shipping boat needs a minimum water depth of <strong>10 meters</strong> to safely enter the harbor. How would you find the safe times on your TI-Nspire?
+                    A passenger can see over the surrounding city walls only when they are higher than <strong>18 meters</strong> in the air. 
+                </div>
+                <div class="step">
+                    <strong>1. Setup your GDC:</strong><br>
+                    Graph your full wave equation \( f1(x) = -10 \cos(9x) + 12 \) alongside the horizontal line \( f2(x) = \) <input type="text" class="inline-blank w-xs" data-answer="18">. 
+                    <br>Then use the <em>intersection</em> tool to find the two exact points where the wave crosses the line during the first revolution.
+                </div>
+                <div class="step">
+                    <strong>2. Final Conclusion:</strong><br>
+                    <em>(Complete the sentence below by rounding your intersection times to the nearest whole second)</em>
                     <br><br>
-                    <strong>Step 1:</strong> Graph the wave \( f1(x) = 5 \cos(30x) + 9 \).
-                    <br><strong>Step 2:</strong> Graph the horizontal line \( f2(x) = \) <input type="text" class="inline-blank w-xs" data-answer="10">.
-                    <br><strong>Step 3:</strong> Use the GDC 
-                    <select class="inline-blank w-lg" data-answer="intersection">
-                        <option value=""></option>
-                        <option value="maximum">Maximum</option>
-                        <option value="minimum">Minimum</option>
-                        <option value="intersection">Intersection</option>
-                    </select> tool to find the exact times where the wave crosses above the safe depth!
+                    "The passenger will be able to see over the city wall between 
+                    <input type="text" class="inline-blank w-sm" data-answer="14"> seconds and 
+                    <input type="text" class="inline-blank w-sm" data-answer="26"> seconds of the ride."
                 </div>
                 <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
             </div>
@@ -365,7 +320,6 @@
 <div id="dev-autofill" onclick="autofillAll()"></div>
 
 <script>
-    // Smart Checker Function
     function checkAnswers(btnElement) {
         let container = btnElement.parentElement;
         let inputs = container.querySelectorAll('.inline-blank');
@@ -374,25 +328,14 @@
             let studentAnswerRaw = input.value.trim();
             let correctAnswerRaw = input.getAttribute('data-answer');
             
-            // Reset classes
             input.classList.remove('correct', 'incorrect');
             
-            if (studentAnswerRaw === "") {
-                return; // Do nothing if empty
-            }
+            if (studentAnswerRaw === "") return;
 
-            // Clean the strings (remove spaces)
             let studentAnswer = studentAnswerRaw.toLowerCase().replace(/\s/g, '');
             let correctAnswer = correctAnswerRaw.toLowerCase().replace(/\s/g, '');
-            
-            // Allow for fractional inputs (e.g. "2/3")
-            if (correctAnswer === "2/3" && (studentAnswer === "2/3" || studentAnswer === "0.66" || studentAnswer === "0.67" || studentAnswer === ".66" || studentAnswer === ".67")) {
-                input.classList.add('correct');
-                return;
-            }
 
-            // Standard numeric check
-            let isNum = !isNaN(studentAnswer) && studentAnswer !== "" && !isNaN(correctAnswer);
+            let isNum = !isNaN(studentAnswer) && studentAnswer !== "" && !isNaN(correctAnswer) && !studentAnswerRaw.includes("A") && !studentAnswerRaw.includes("B") && !studentAnswerRaw.includes("C") && !studentAnswerRaw.includes("D");
 
             if (isNum) {
                 if (Math.abs(parseFloat(studentAnswer) - parseFloat(correctAnswer)) < 0.015) {
@@ -401,7 +344,6 @@
                     input.classList.add('incorrect');
                 }
             } else {
-                // Dropdown / String check
                 if (studentAnswer === correctAnswer) {
                     input.classList.add('correct');
                 } else {
@@ -411,7 +353,6 @@
         });
     }
 
-    // Secret Autofill Function
     function autofillAll() {
         let allInputs = document.querySelectorAll('.inline-blank');
         allInputs.forEach(input => {

@@ -13,6 +13,8 @@
   };
 </script>
 
+<script src="https://www.desmos.com/api/v1.8/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+
 <style>
     :root {
         --primary: #4f46e5; 
@@ -106,7 +108,7 @@
 <div class="lesson-container">
 
     <header class="hero-header">
-        <span class="badge">The Finale</span>
+        <span class="badge">Day 3 of 3 • The Finale</span>
         <h1>Interactive Notes: CFE Review 6</h1>
         <p>Voronoi Diagrams & Sinusoidal Functions</p>
     </header>
@@ -351,18 +353,18 @@
             <summary>Part D: GDC Application (Intersections)</summary>
             <div class="interactive-content">
                 <div class="step">
-                    A large shipping boat needs a minimum water depth of <strong>10 meters</strong> to safely enter the harbor. 
+                    A large shipping boat needs a minimum water depth of <strong>10 meters</strong> to safely enter the harbor.
+                    <br><br>
+                    Use the <strong>Desmos Calculator</strong> below to graph your full wave equation \( y = 5 \cos(30x) + 9 \) and the horizontal safety line \( y = 10 \). <em>(Hint: Just click on the dots where the lines cross to see the intersection points!)</em>
                 </div>
+                
+                <div id="calculator-notes" style="width: 100%; height: 400px; border: 1px solid #cbd5e1; border-radius: 8px; margin: 15px 0;"></div>
+
                 <div class="step">
-                    <strong>1. Setup your GDC:</strong><br>
-                    Graph your full wave equation \( f1(x) = 5 \cos(30x) + 9 \) alongside the horizontal line \( f2(x) = \) <input type="text" class="inline-blank w-xs" data-answer="10">. 
-                    <br>Then use the <em>intersection</em> tool to find every point where the wave crosses the line during a 24-hour period (from \( x=0 \) to \( x=24 \)).
-                </div>
-                <div class="step">
-                    <strong>2. Final Conclusion:</strong><br>
+                    <strong>Final Conclusion:</strong><br>
                     <em>(Complete the sentence below by rounding your intersection times to 1 decimal place)</em>
                     <br><br>
-                    "During the 24-hour period, the boat can safely enter from midnight (t=0) until 
+                    "During the 24-hour period, the boat can safely enter the harbor from midnight (t=0) until 
                     <input type="text" class="inline-blank w-sm" data-answer="2.6"> hours, then again from 
                     <input type="text" class="inline-blank w-sm" data-answer="9.4"> hours to 
                     <input type="text" class="inline-blank w-sm" data-answer="14.6"> hours, and finally from 
@@ -378,6 +380,41 @@
 <div id="dev-autofill" onclick="autofillAll()"></div>
 
 <script>
+    // Initialize LocalStorage for saving inputs
+    document.addEventListener("DOMContentLoaded", () => {
+        let allInputs = document.querySelectorAll('.inline-blank');
+        allInputs.forEach((input, index) => {
+            let storageKey = `cfe6-notes-input-${index}`;
+            
+            // Load saved value if it exists
+            if(localStorage.getItem(storageKey)) {
+                input.value = localStorage.getItem(storageKey);
+            }
+            
+            // Save value whenever the student types or changes a dropdown
+            input.addEventListener('input', () => {
+                localStorage.setItem(storageKey, input.value);
+            });
+        });
+
+        // Initialize Desmos Calculator
+        var elt = document.getElementById('calculator-notes');
+        var calculator = Desmos.GraphingCalculator(elt, {
+            keypad: true,
+            expressions: true,
+            settingsMenu: true,
+            degreeMode: true // Forces the calculator into Degree Mode for IB!
+        });
+        
+        // Set the default viewing window to perfectly fit the 24-hour wave
+        calculator.setMathBounds({
+          left: -2,
+          right: 26,
+          bottom: -2,
+          top: 18
+        });
+    });
+
     // Smart Checker Function
     function checkAnswers(btnElement) {
         let container = btnElement.parentElement;
@@ -387,24 +424,17 @@
             let studentAnswerRaw = input.value.trim();
             let correctAnswerRaw = input.getAttribute('data-answer');
             
-            // Reset classes
             input.classList.remove('correct', 'incorrect');
-            
-            if (studentAnswerRaw === "") {
-                return; // Do nothing if empty
-            }
+            if (studentAnswerRaw === "") return;
 
-            // Clean the strings (remove spaces)
             let studentAnswer = studentAnswerRaw.toLowerCase().replace(/\s/g, '');
             let correctAnswer = correctAnswerRaw.toLowerCase().replace(/\s/g, '');
             
-            // Allow for fractional inputs (e.g. "2/3")
             if (correctAnswer === "2/3" && (studentAnswer === "2/3" || studentAnswer === "0.66" || studentAnswer === "0.67" || studentAnswer === ".66" || studentAnswer === ".67")) {
                 input.classList.add('correct');
                 return;
             }
 
-            // Standard numeric check (with increased tolerance for 2.6 vs 2.62 rounding)
             let isNum = !isNaN(studentAnswer) && studentAnswer !== "" && !isNaN(correctAnswer) && !studentAnswerRaw.includes("A") && !studentAnswerRaw.includes("B") && !studentAnswerRaw.includes("C") && !studentAnswerRaw.includes("D");
 
             if (isNum) {
@@ -414,7 +444,6 @@
                     input.classList.add('incorrect');
                 }
             } else {
-                // Dropdown / String check
                 if (studentAnswer === correctAnswer) {
                     input.classList.add('correct');
                 } else {
@@ -427,10 +456,12 @@
     // Secret Autofill Function
     function autofillAll() {
         let allInputs = document.querySelectorAll('.inline-blank');
-        allInputs.forEach(input => {
-            input.value = input.getAttribute('data-answer');
+        allInputs.forEach((input, index) => {
+            let answer = input.getAttribute('data-answer');
+            input.value = answer;
             input.classList.remove('incorrect');
             input.classList.add('correct');
+            localStorage.setItem(`cfe6-notes-input-${index}`, answer);
         });
     }
 </script>

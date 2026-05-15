@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trial Auto-Graded Quiz</title>
+
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #f8fafc; padding: 30px; display: flex; justify-content: center; }
+    .quiz-container { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 600px; width: 100%; }
+    h1 { color: #1e293b; text-align: center; }
+    .info-group { display: flex; gap: 10px; margin-bottom: 20px; }
+    input[type="text"], input[type="number"] { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #cbd5e1; border-radius: 6px; }
+    .question { margin-top: 25px; padding-top: 15px; border-top: 2px dashed #e2e8f0; }
+    .submit-btn { background: #2563eb; color: white; width: 100%; padding: 15px; border: none; border-radius: 8px; font-size: 1.2em; font-weight: bold; cursor: pointer; margin-top: 30px; }
+    .submit-btn:hover { background: #1d4ed8; }
+    #success-message { display: none; text-align: center; color: #10b981; font-weight: bold; font-size: 1.5em; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<div class="quiz-container" id="quiz-box">
+    <h1>Math Trial Quiz</h1>
+    <p>Please enter your information and the access code provided by the teacher.</p>
+    
+    <div class="info-group">
+        <div><label>First Name:</label><input type="text" id="fname" required></div>
+        <div><label>Last Name:</label><input type="text" id="lname" required></div>
+    </div>
+    <div class="info-group">
+        <div><label>Student ID:</label><input type="text" id="sid" required></div>
+        <div><label>Access Code:</label><input type="text" id="access-code" required></div>
+    </div>
+
+    <div class="question">
+        <p><strong>1. What is 5 + 7?</strong></p>
+        <label><input type="radio" name="q1" value="10"> 10</label><br>
+        <label><input type="radio" name="q1" value="12"> 12</label><br>
+        <label><input type="radio" name="q1" value="14"> 14</label>
+    </div>
+
+    <div class="question">
+        <p><strong>2. What is 3 &times; 4?</strong></p>
+        <label><input type="radio" name="q2" value="7"> 7</label><br>
+        <label><input type="radio" name="q2" value="12"> 12</label><br>
+        <label><input type="radio" name="q2" value="15"> 15</label>
+    </div>
+
+    <button class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+</div>
+
+<div id="success-message">
+    🎉 Quiz Submitted Successfully! You may close this tab.
+</div>
+
+<script>
+    // THE SECRET ACCESS CODE FOR TODAY
+    const CORRECT_ACCESS_CODE = "TRIAL123";
+
+    // PASTE YOUR GOOGLE WEB APP URL HERE:
+    const GOOGLE_APP_URL = "PASTE_YOUR_URL_HERE";
+
+    function submitQuiz() {
+        let fname = document.getElementById("fname").value.trim();
+        let lname = document.getElementById("lname").value.trim();
+        let sid = document.getElementById("sid").value.trim();
+        let code = document.getElementById("access-code").value.trim().toUpperCase();
+
+        if(!fname || !lname || !sid) {
+            alert("Please fill out your name and Student ID!");
+            return;
+        }
+
+        if(code !== CORRECT_ACCESS_CODE) {
+            alert("Incorrect Access Code!");
+            return;
+        }
+
+        // Auto-Grade the Quiz
+        let score = 0;
+        let q1 = document.querySelector('input[name="q1"]:checked');
+        let q2 = document.querySelector('input[name="q2"]:checked');
+
+        if(q1 && q1.value === "12") score += 50; // Question 1 is worth 50 points
+        if(q2 && q2.value === "12") score += 50; // Question 2 is worth 50 points
+
+        // Change button to show it's loading
+        let btn = document.querySelector(".submit-btn");
+        btn.innerText = "Submitting...";
+        btn.disabled = true;
+
+        // Bundle data to send to Google Sheets
+        let formData = new URLSearchParams();
+        formData.append("firstName", fname);
+        formData.append("lastName", lname);
+        formData.append("studentId", sid);
+        formData.append("score", score);
+
+        // Send to Google!
+        fetch(GOOGLE_APP_URL, {https://script.google.com/macros/s/AKfycbzRcpDmhGWxW5VOeC36UcRGCaz9_595UOkE9k5ND5aDqOa93sCa3EDtc7snu2O_K8A2/exec
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            // Hide the quiz, show the success message
+            document.getElementById("quiz-box").style.display = "none";
+            document.getElementById("success-message").style.display = "block";
+        })
+        .catch(error => {
+            alert("Error submitting. Please tell Mr. Reece!");
+            btn.innerText = "Submit Quiz";
+            btn.disabled = false;
+        });
+    }
+</script>
+
+</body>
+</html>

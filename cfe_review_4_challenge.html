@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CFE #4: Master Challenge</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a2e;
+            color: #e6e6e6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        .app-container {
+            background-color: #16213e;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            max-width: 800px;
+            width: 100%;
+            border-top: 6px solid #e94560;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #0f3460;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        .header h2 { margin: 0; color: #e94560; font-size: 2em; letter-spacing: 1px;}
+        .header p { color: #a9a9b3; margin-top: 5px; font-style: italic; }
+        
+        .challenge-box {
+            background: #0f3460;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #e94560;
+        }
+        .challenge-title {
+            font-weight: bold;
+            color: #e94560;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        
+        .fraction { display: inline-block; vertical-align: middle; text-align: center; margin: 0 5px;}
+        .numerator { border-bottom: 1px solid #e6e6e6; padding: 0 5px; }
+        .denominator { padding: 0 5px; }
+        
+        input[type="text"], input[type="number"] {
+            padding: 8px;
+            border: 2px solid #1a1a2e;
+            background-color: #e6e6e6;
+            color: #1a1a2e;
+            border-radius: 5px;
+            font-size: 1em;
+            width: 60px;
+            text-align: center;
+            font-weight: bold;
+            outline: none;
+            transition: 0.3s;
+        }
+        .input-large { width: 100px !important; }
+        
+        .correct-input { background-color: #4cd137 !important; border-color: #44bd32 !important; color: white !important;}
+        .incorrect-input { background-color: #e84118 !important; border-color: #c23616 !important; color: white !important;}
+        
+        .controls { text-align: center; margin-top: 30px; }
+        button {
+            background-color: #e94560;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        button:hover { background-color: #c83b52; transform: scale(1.02); }
+        
+        .feedback {
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-top: 20px;
+            min-height: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <h2>Titan Challenge: Level 4</h2>
+        <p>Reverse-engineering, parameter analysis, and high-level synthesis.</p>
+    </div>
+    
+    <div class="challenge-box">
+        <div class="challenge-title">1. The Missing Parameter (Rational Equations)</div>
+        <p>Consider the rational equation: 
+           <div class="fraction"><div class="numerator">x</div><div class="denominator">x - k</div></div> + 
+           <div class="fraction"><div class="numerator">2</div><div class="denominator">x + 3</div></div> = 
+           <div class="fraction"><div class="numerator">5</div><div class="denominator">x&sup2; - x - 12</div></div>
+        </p>
+        <p>Without fully solving the equation, what must the value of the parameter <strong>k</strong> be in order for the Least Common Denominator (LCD) to perfectly match the quadratic denominator on the right?</p>
+        <div style="text-align: right;">
+            k = <input type="number" id="q1_k">
+        </div>
+    </div>
+
+    <div class="challenge-box">
+        <div class="challenge-title">2. Reverse Engineering (Polynomials)</div>
+        <p>A cubic polynomial P(x) has a root at x = 2 with a multiplicity of 2, and another root at x = -3. If the y-intercept of the polynomial is -24, write the polynomial in standard form: P(x) = ax&sup3; + bx&sup2; + cx + d.</p>
+        <div style="text-align: right;">
+            P(x) = <input type="number" id="q2_a"> x&sup3; + <input type="number" id="q2_b"> x&sup2; + <input type="number" id="q2_c"> x + <input type="number" id="q2_d">
+        </div>
+    </div>
+
+    <div class="challenge-box">
+        <div class="challenge-title">3. Boundary Analysis (Absolute Value Inequalities)</div>
+        <p>An absolute value inequality is given in the form |x + b| < c. If the final shaded solution set on a number line is the interval (-1, 5), determine the values of b and c.</p>
+        <div style="text-align: right;">
+            b = <input type="number" id="q3_b"> &nbsp;&nbsp;&nbsp; c = <input type="number" id="q3_c">
+        </div>
+    </div>
+
+    <div class="challenge-box">
+        <div class="challenge-title">4. The Phantom Root (Radical Equations)</div>
+        <p>Consider the equation &radic;<span style="border-top: 1px solid #e6e6e6; padding-top:1px;">x + k</span> = x. You are told that x = 4 is a valid, mathematically sound solution to this equation. If you were to fully solve the resulting quadratic equation, what is the value of the <em>extraneous</em> solution?</p>
+        <div style="text-align: right;">
+            Extraneous Root: x = <input type="number" id="q4_ext">
+        </div>
+    </div>
+
+    <div class="challenge-box">
+        <div class="challenge-title">5. Intersection Geometry (Non-Linear Systems)</div>
+        <p>A parabola has a vertex at (1, -4) and crosses the positive x-axis at x = 3. A linear equation passes through both the vertex of this parabola and its positive x-intercept. What is the equation of the line in y = mx + b form?</p>
+        <div style="text-align: right;">
+            y = <input type="number" id="q5_m"> x + <input type="number" id="q5_b">
+        </div>
+    </div>
+
+    <div class="controls">
+        <button onclick="checkMastery()">Verify Solutions</button>
+    </div>
+    
+    <div class="feedback" id="feedbackMsg"></div>
+</div>
+
+<script>
+    // The exact analytical answers for the high-level problems
+    const answers = {
+        'q1_k': 4,      // (x-4)(x+3) = x^2 - x - 12
+        'q2_a': -2,     // a(x-2)^2(x+3). y-int = a(-2)^2(3) = 12a = -24 -> a=-2. 
+        'q2_b': 2,      // -2(x^2 - 4x + 4)(x+3) = -2(x^3 - x^2 - 8x + 12) -> -2x^3 + 2x^2 + 16x - 24
+        'q2_c': 16,
+        'q2_d': -24,
+        'q3_b': -2,     // Midpoint of -1 and 5 is 2. Distance is 3. |x - 2| < 3
+        'q3_c': 3,
+        'q4_ext': -3,   // 4 = sqrt(4+k) -> k=12. sqrt(x+12)=x -> x^2-x-12=0 -> (x-4)(x+3)=0. Extraneous is -3.
+        'q5_m': 2,      // Vertex (1, -4), root (3, 0). Slope = (0 - -4)/(3 - 1) = 4/2 = 2.
+        'q5_b': -6      // y - 0 = 2(x - 3) -> y = 2x - 6
+    };
+
+    function checkMastery() {
+        let allCorrect = true;
+        let keys = Object.keys(answers);
+
+        keys.forEach(key => {
+            let el = document.getElementById(key);
+            let val = parseFloat(el.value);
+            let correctVal = answers[key];
+
+            el.classList.remove('correct-input', 'incorrect-input');
+
+            if (val === correctVal) {
+                el.classList.add('correct-input');
+            } else {
+                el.classList.add('incorrect-input');
+                allCorrect = false;
+            }
+        });
+
+        let fb = document.getElementById('feedbackMsg');
+        if (allCorrect) {
+            fb.innerHTML = "<span style='color: #4cd137;'>🏆 Master Status Achieved! All high-level analysis is correct.</span>";
+        } else {
+            fb.innerHTML = "<span style='color: #e84118;'>⚠️ System Error. Check the red highlighted parameters.</span>";
+        }
+    }
+</script>
+</body>
+</html>

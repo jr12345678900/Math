@@ -13,9 +13,11 @@
   };
 </script>
 
+<script src="https://www.desmos.com/api/v1.8/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+
 <style>
     :root {
-        --primary: #b45309; /* Amber/Orange */
+        --primary: #b45309; 
         --secondary: #d97706; 
         --bg-color: #f8fafc;
         --card-bg: #ffffff;
@@ -102,7 +104,7 @@
     <header class="hero-header">
         <span class="badge">Independent Practice</span>
         <h1>CFE Mastery: Review 6</h1>
-        <p>Apply your skills: Voronoi Boundaries & Sinusoidal Functions</p>
+        <p>Apply your skills: Voronoi Boundaries &amp; Sinusoidal Functions</p>
     </header>
 
     <section class="section-card">
@@ -228,13 +230,13 @@
         <div class="context-box">
             The height above ground, \( h \), of a passenger on a Ferris wheel is modeled by a sinusoidal function.
             <br><br>
-            • The passenger boards the ride at the very bottom (the minimum height), which is <strong>2 meters</strong> above the ground at time \( t = 0 \). <br>
-            • The Ferris wheel reaches a maximum peak height of <strong>22 meters</strong>. <br>
-            • It takes exactly <strong>40 seconds</strong> for the wheel to complete one full revolution.
+            &bull; The passenger boards the ride at the very bottom (the minimum height), which is <strong>2 meters</strong> above the ground at time \( t = 0 \). <br>
+            &bull; The Ferris wheel reaches a maximum peak height of <strong>22 meters</strong>. <br>
+            &bull; It takes exactly <strong>40 seconds</strong> for the wheel to complete one full revolution.
         </div>
 
         <details>
-            <summary>Part A: Principal Axis & Amplitude</summary>
+            <summary>Part A: Principal Axis &amp; Amplitude</summary>
             <div class="interactive-content">
                 <div class="step">
                     <strong>1. The Principal Axis (\(d\)):</strong><br>
@@ -257,7 +259,7 @@
         </details>
 
         <details>
-            <summary>Part B: Period & Equation Setup</summary>
+            <summary>Part B: Period &amp; Equation Setup</summary>
             <div class="interactive-content">
                 <div class="step">
                     <strong>1. The \(b\) value:</strong><br>
@@ -299,9 +301,12 @@
                 </div>
                 <div class="step">
                     <strong>1. Setup your GDC:</strong><br>
-                    Graph your full wave equation \( f1(x) = -10 \cos(9x) + 12 \) alongside the horizontal line \( f2(x) = \) <input type="text" class="inline-blank w-xs" data-answer="18">. 
-                    <br>Then use the <em>intersection</em> tool to find the two exact points where the wave crosses the line during the first revolution.
+                    Use the Desmos calculator below to graph your full wave equation \( y = -10 \cos(9x) + 12 \) alongside the horizontal line \( y = \) <input type="text" class="inline-blank w-xs" data-answer="18">. 
+                    <br>Then find the two exact points where the wave crosses above the line during the first 40-second revolution!
                 </div>
+
+                <div id="calculator-practice" style="width: 100%; height: 400px; border: 1px solid #cbd5e1; border-radius: 8px; margin: 15px 0;"></div>
+
                 <div class="step">
                     <strong>2. Final Conclusion:</strong><br>
                     <em>(Complete the sentence below by rounding your intersection times to the nearest whole second)</em>
@@ -320,6 +325,43 @@
 <div id="dev-autofill" onclick="autofillAll()"></div>
 
 <script>
+    // Initialize LocalStorage for saving inputs
+    document.addEventListener("DOMContentLoaded", () => {
+        let allInputs = document.querySelectorAll('.inline-blank');
+        allInputs.forEach((input, index) => {
+            let storageKey = `cfe6-prac-input-${index}`;
+            
+            // Load saved value if it exists
+            if(localStorage.getItem(storageKey)) {
+                input.value = localStorage.getItem(storageKey);
+            }
+            
+            // Save value whenever the student types or changes a dropdown
+            input.addEventListener('input', () => {
+                localStorage.setItem(storageKey, input.value);
+            });
+        });
+
+        // Initialize Desmos Calculator
+        var elt = document.getElementById('calculator-practice');
+        var calculator = Desmos.GraphingCalculator(elt, {
+            keypad: true,
+            expressions: true,
+            settingsMenu: true,
+            degreeMode: true, // Forces the calculator into Degree Mode for IB!
+            xAxisStep: 5,     // Makes X axis tick marks jump by 5 seconds so it looks clean
+            yAxisStep: 2      // Makes Y axis tick marks jump by 2 meters
+        });
+        
+        // Set the default viewing window to perfectly fit the 40-second Ferris wheel ride
+        calculator.setMathBounds({
+          left: -5,
+          right: 45,
+          bottom: -5,
+          top: 25
+        });
+    });
+
     function checkAnswers(btnElement) {
         let container = btnElement.parentElement;
         let inputs = container.querySelectorAll('.inline-blank');
@@ -329,7 +371,6 @@
             let correctAnswerRaw = input.getAttribute('data-answer');
             
             input.classList.remove('correct', 'incorrect');
-            
             if (studentAnswerRaw === "") return;
 
             let studentAnswer = studentAnswerRaw.toLowerCase().replace(/\s/g, '');
@@ -338,7 +379,8 @@
             let isNum = !isNaN(studentAnswer) && studentAnswer !== "" && !isNaN(correctAnswer) && !studentAnswerRaw.includes("A") && !studentAnswerRaw.includes("B") && !studentAnswerRaw.includes("C") && !studentAnswerRaw.includes("D");
 
             if (isNum) {
-                if (Math.abs(parseFloat(studentAnswer) - parseFloat(correctAnswer)) < 0.015) {
+                // Wide tolerance to allow 14, 14.1, 26, 25.9
+                if (Math.abs(parseFloat(studentAnswer) - parseFloat(correctAnswer)) < 0.2) {
                     input.classList.add('correct');
                 } else {
                     input.classList.add('incorrect');
@@ -355,10 +397,12 @@
 
     function autofillAll() {
         let allInputs = document.querySelectorAll('.inline-blank');
-        allInputs.forEach(input => {
-            input.value = input.getAttribute('data-answer');
+        allInputs.forEach((input, index) => {
+            let answer = input.getAttribute('data-answer');
+            input.value = answer;
             input.classList.remove('incorrect');
             input.classList.add('correct');
+            localStorage.setItem(`cfe6-prac-input-${index}`, answer);
         });
     }
 </script>

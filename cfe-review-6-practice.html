@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFE Practice 6: Independent Review</title>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }
+  };
+</script>
+
+<style>
+    :root {
+        --primary: #b45309; /* Amber/Orange */
+        --secondary: #d97706; 
+        --bg-color: #f8fafc;
+        --card-bg: #ffffff;
+        --text-main: #334155;
+        --success: #10b981;
+        --danger: #ef4444;
+    }
+    
+    body { font-family: 'Inter', 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 20px; line-height: 1.8; font-size: 110%; }
+    .lesson-container { max-width: 900px; margin: auto; }
+    
+    /* Header */
+    .hero-header { background: linear-gradient(135deg, #78350f, #b45309); color: white; padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 30px; box-shadow: 0 10px 15px -3px rgba(180, 83, 9, 0.2); }
+    .hero-header h1 { margin: 0; font-size: 2.3em; letter-spacing: -0.5px; }
+    .badge { display: inline-block; background: #fef3c7; color: #78350f; padding: 4px 12px; border-radius: 20px; font-size: 0.85em; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; }
+    
+    /* Sections */
+    .section-card { background: var(--card-bg); padding: 35px; border-radius: 12px; margin-bottom: 35px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-top: 5px solid var(--secondary); }
+    .section-card h2 { margin-top: 0; color: var(--primary); font-size: 1.6em; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+    .context-box { background: #fffbeb; padding: 15px 20px; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 20px; color: #78350f; }
+
+    /* Interactive Inline Inputs & Dropdowns */
+    .inline-blank {
+        border: none;
+        border-bottom: 2px dashed #94a3b8;
+        background: transparent;
+        font-family: inherit;
+        font-size: 1em;
+        color: #2563eb; 
+        font-weight: 700;
+        text-align: center;
+        outline: none;
+        padding: 0 5px;
+        transition: all 0.3s;
+        margin: 0 5px;
+        cursor: pointer;
+    }
+    
+    .inline-blank:focus { border-bottom: 2px solid #2563eb; background: #eff6ff; }
+    .w-xs { width: 45px; }
+    .w-sm { width: 65px; }
+    .w-md { width: 95px; }
+    .w-lg { width: 160px; }
+
+    /* Custom Dropdown Styling */
+    select.inline-blank {
+        appearance: none;
+        -webkit-appearance: none;
+        padding-right: 18px;
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394a3b8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+        background-repeat: no-repeat;
+        background-position: right center;
+        background-size: 10px auto;
+    }
+
+    /* Validation Colors */
+    .correct { border-bottom: 2px solid var(--success) !important; color: var(--success); }
+    .incorrect { border-bottom: 2px solid var(--danger) !important; color: var(--danger); background: #fef2f2; }
+
+    /* Collapsible Details */
+    details { border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; }
+    summary { padding: 15px; font-weight: bold; cursor: pointer; background: #f8fafc; font-size: 1.1em; outline: none; list-style: none; display: flex; align-items: center; justify-content: space-between; }
+    summary::after { content: "+"; color: var(--secondary); font-size: 1.4em; }
+    details[open] summary::after { content: "−"; }
+    details[open] summary { border-bottom: 1px solid #e2e8f0; }
+    
+    .interactive-content { padding: 25px; background: #ffffff; }
+    .step { margin-bottom: 15px; }
+    .calc-box { background: #f1f5f9; padding: 10px 15px; border-radius: 6px; font-family: monospace; font-size: 1.1em; color: #334155; margin-top: 10px; display: inline-block;}
+    
+    .check-btn { background: var(--secondary); color: white; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 15px; transition: 0.2s; font-size: 0.95em; }
+    .check-btn:hover { background: var(--primary); }
+    
+    .svg-container { text-align: center; margin: 20px 0; background: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
+
+    /* Hidden Autofill */
+    #dev-autofill { position: fixed; bottom: 5px; right: 5px; width: 15px; height: 15px; background: transparent; cursor: pointer; border-radius: 50%; }
+</style>
+</head>
+<body>
+
+<div class="lesson-container">
+
+    <header class="hero-header">
+        <span class="badge">Independent Practice</span>
+        <h1>CFE Mastery: Review 6</h1>
+        <p>Apply your skills: Voronoi Boundaries & Sinusoidal Functions</p>
+    </header>
+
+    <section class="section-card">
+        <h2>🗺️ Practice 1: Delivery Drone Zones</h2>
+        <div class="context-box">
+            A logistics company uses a Voronoi diagram to map out delivery zones for four drone dispatch stations: 
+            <strong>A(2, 6)</strong>, <strong>B(6, 2)</strong>, <strong>C(10, 4)</strong>, and <strong>D(6, 10)</strong>.
+            <br>The Voronoi diagram below shows the resulting boundaries and two distinct vertices (\(V_1\) and \(V_2\)).
+        </div>
+
+        <div class="svg-container">
+            <svg width="100%" height="350" viewBox="-2 -2 16 16" style="background: #f8fafc; border: 1px solid #cbd5e1; max-width: 500px;">
+                <g stroke="#cbd5e1" stroke-width="0.05">
+                    <line x1="-2" y1="12" x2="14" y2="12" />
+                    <line x1="-2" y1="10" x2="14" y2="10" />
+                    <line x1="-2" y1="8" x2="14" y2="8" />
+                    <line x1="-2" y1="6" x2="14" y2="6" />
+                    <line x1="-2" y1="4" x2="14" y2="4" />
+                    <line x1="-2" y1="2" x2="14" y2="2" />
+                    <line x1="-2" y1="0" x2="14" y2="0" />
+                    <line x1="-2" y1="-2" x2="14" y2="-2" />
+                    
+                    <line x1="0" y1="-2" x2="0" y2="14" />
+                    <line x1="2" y1="-2" x2="2" y2="14" />
+                    <line x1="4" y1="-2" x2="4" y2="14" />
+                    <line x1="6" y1="-2" x2="6" y2="14" />
+                    <line x1="8" y1="-2" x2="8" y2="14" />
+                    <line x1="10" y1="-2" x2="10" y2="14" />
+                    <line x1="12" y1="-2" x2="12" y2="14" />
+                </g>
+                
+                <line x1="-2" y1="12" x2="14" y2="12" stroke="#1e293b" stroke-width="0.15" /> <line x1="0" y1="-2" x2="0" y2="14" stroke="#1e293b" stroke-width="0.15" /> <text x="13.5" y="11.5" font-family="sans-serif" font-size="0.6" font-weight="bold">x</text>
+                <text x="0.3" y="-0.5" font-family="sans-serif" font-size="0.6" font-weight="bold">y</text>
+
+                <line x1="6" y1="6" x2="6.5" y2="6" stroke="#ea580c" stroke-width="0.15" /> 
+                <line x1="6" y1="6" x2="0" y2="12" stroke="#ea580c" stroke-width="0.15" />
+                <line x1="6" y1="6" x2="0" y2="0" stroke="#ea580c" stroke-width="0.15" />
+                <line x1="6.5" y1="6" x2="9.5" y2="12" stroke="#ea580c" stroke-width="0.15" />
+                <line x1="6.5" y1="6" x2="14" y2="1" stroke="#ea580c" stroke-width="0.15" />
+
+                <circle cx="2" cy="6" r="0.25" fill="#1e40af" />
+                <text x="1.5" y="5.5" font-family="sans-serif" font-size="0.8" font-weight="bold" fill="#1e40af">A</text>
+                
+                <circle cx="6" cy="10" r="0.25" fill="#1e40af" />
+                <text x="6.4" y="10.8" font-family="sans-serif" font-size="0.8" font-weight="bold" fill="#1e40af">B</text>
+                
+                <circle cx="10" cy="8" r="0.25" fill="#1e40af" />
+                <text x="10.5" y="8.5" font-family="sans-serif" font-weight="bold" font-size="0.8" fill="#1e40af">C</text>
+
+                <circle cx="6" cy="2" r="0.25" fill="#1e40af" />
+                <text x="5.5" y="1.5" font-family="sans-serif" font-weight="bold" font-size="0.8" fill="#1e40af">D</text>
+
+                <circle cx="6" cy="6" r="0.15" fill="#ea580c" />
+                <text x="5" y="6.4" font-family="sans-serif" font-weight="bold" fill="#ea580c" font-size="0.6">V1</text>
+
+                <circle cx="6.5" cy="6" r="0.15" fill="#ea580c" />
+                <text x="6.8" y="6.4" font-family="sans-serif" font-weight="bold" fill="#ea580c" font-size="0.6">V2</text>
+            </svg>
+        </div>
+
+        <details>
+            <summary>Part A: Calculating the Boundary Equation</summary>
+            <div class="interactive-content">
+                <div class="step">
+                    Your task is to mathematically find the equation of the boundary line separating <strong>Site A(2, 6)</strong> and <strong>Site B(6, 2)</strong>.
+                </div>
+                <div class="step">
+                    <strong>1. Find the Midpoint of AB:</strong><br>
+                    \( M = \left( \frac{2+6}{2}, \frac{6+2}{2} \right) = ( \) 
+                    <input type="text" class="inline-blank w-xs" data-answer="4"> , 
+                    <input type="text" class="inline-blank w-xs" data-answer="4"> \( ) \)
+                </div>
+                <div class="step">
+                    <strong>2. Find the Gradient of the line AB:</strong><br>
+                    \( m = \frac{2 - 6}{6 - 2} = \) <input type="text" class="inline-blank w-xs" data-answer="-1">
+                </div>
+                <div class="step">
+                    <strong>3. Find the Perpendicular Gradient:</strong><br>
+                    Flip the fraction and change the sign. The perpendicular slope is <input type="text" class="inline-blank w-xs" data-answer="1">.
+                </div>
+                <div class="step">
+                    <strong>4. Write the Final Equation:</strong><br>
+                    Use the point-slope formula \( y - y_1 = m(x - x_1) \).
+                    <br><br>
+                    \( y - \) <input type="text" class="inline-blank w-xs" data-answer="4"> 
+                    \( = \) <input type="text" class="inline-blank w-xs" data-answer="1"> 
+                    \( ( x - \) <input type="text" class="inline-blank w-xs" data-answer="4"> \( ) \)
+                </div>
+                <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
+            </div>
+        </details>
+
+        <details>
+            <summary>Part B: Vertex Analysis</summary>
+            <div class="interactive-content">
+                <div class="step">
+                    Look closely at Vertex \( V_1 \) on the diagram. Because it is the intersection of three specific boundaries, the coordinate for \( V_1 \) is perfectly equidistant from which three sites?
+                    <br><br>
+                    Sites 
+                    <select class="inline-blank w-xs" data-answer="A">
+                        <option value=""></option>
+                        <option value="A">A</option>
+                        <option value="C">C</option>
+                    </select> , 
+                    <select class="inline-blank w-xs" data-answer="B">
+                        <option value=""></option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select> , and 
+                    <select class="inline-blank w-xs" data-answer="D">
+                        <option value=""></option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                    </select>.
+                </div>
+                <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
+            </div>
+        </details>
+    </section>
+
+    <section class="section-card">
+        <h2>🎡 Practice 2: The Ferris Wheel</h2>
+        <div class="context-box">
+            The height above ground, \( h \), of a passenger on a Ferris wheel is modeled by a sinusoidal function.
+            <br><br>
+            • The passenger boards the ride at the very bottom (the minimum height), which is <strong>2 meters</strong> above the ground at time \( t = 0 \). <br>
+            • The Ferris wheel reaches a maximum peak height of <strong>22 meters</strong>. <br>
+            • It takes exactly <strong>40 seconds</strong> for the wheel to complete one full revolution.
+        </div>
+
+        <details>
+            <summary>Part A: Principal Axis & Amplitude</summary>
+            <div class="interactive-content">
+                <div class="step">
+                    <strong>1. The Principal Axis (\(d\)):</strong><br>
+                    \( d = (\text{Max} + \text{Min}) \div 2 \)<br>
+                    \( d = ( \) 
+                    <input type="text" class="inline-blank w-xs" data-answer="22"> + 
+                    <input type="text" class="inline-blank w-xs" data-answer="2"> 
+                    \( ) \div 2 = \) <input type="text" class="inline-blank w-xs" data-answer="12"> meters.
+                </div>
+                <div class="step">
+                    <strong>2. The Amplitude (\(a\)):</strong><br>
+                    \( a = (\text{Max} - \text{Min}) \div 2 \)<br>
+                    \( a = ( \) 
+                    <input type="text" class="inline-blank w-xs" data-answer="22"> &minus; 
+                    <input type="text" class="inline-blank w-xs" data-answer="2"> 
+                    \( ) \div 2 = \) <input type="text" class="inline-blank w-xs" data-answer="10"> meters.
+                </div>
+                <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
+            </div>
+        </details>
+
+        <details>
+            <summary>Part B: Period & Equation Setup</summary>
+            <div class="interactive-content">
+                <div class="step">
+                    <strong>1. The \(b\) value:</strong><br>
+                    Because one full revolution takes 40 seconds, the period is 40. <br>
+                    \( b = 360^\circ \div \) <input type="text" class="inline-blank w-sm" data-answer="40"> = <input type="text" class="inline-blank w-xs" data-answer="9"> \(^\circ\).
+                </div>
+                <div class="step">
+                    <strong>2. Choosing the Model:</strong><br>
+                    The passenger starts the ride at the <strong>minimum</strong> height and goes up. Therefore, the base model we must use is 
+                    <select class="inline-blank w-lg" data-answer="negative cosine">
+                        <option value=""></option>
+                        <option value="positive sine">Positive Sine</option>
+                        <option value="negative sine">Negative Sine</option>
+                        <option value="positive cosine">Positive Cosine</option>
+                        <option value="negative cosine">Negative Cosine</option>
+                    </select>.
+                </div>
+                <div class="step">
+                    <strong>3. Final Equation:</strong><br>
+                    Putting it all together, the equation for the height is:<br>
+                    <div class="calc-box">
+                        \( h(t) = \) 
+                        <input type="text" class="inline-blank w-xs" data-answer="-10"> 
+                        \( \cos( \) 
+                        <input type="text" class="inline-blank w-xs" data-answer="9"> 
+                        \( t ) + \) 
+                        <input type="text" class="inline-blank w-xs" data-answer="12">
+                    </div>
+                </div>
+                <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
+            </div>
+        </details>
+
+        <details>
+            <summary>Part C: GDC Application (Real World)</summary>
+            <div class="interactive-content">
+                <div class="step">
+                    A passenger can see over the surrounding city walls only when they are higher than <strong>18 meters</strong> in the air. 
+                    <br><br>
+                    To find the exact times they can see over the wall during the first revolution, you would set up your TI-Nspire graph with:
+                    <br>
+                    \( f1(x) = -10 \cos(9x) + 12 \)
+                    <br>
+                    \( f2(x) = \) <input type="text" class="inline-blank w-sm" data-answer="18">
+                </div>
+                <div class="step">
+                    Then, you would use the 
+                    <select class="inline-blank w-md" data-answer="intersection">
+                        <option value=""></option>
+                        <option value="maximum">Maximum</option>
+                        <option value="minimum">Minimum</option>
+                        <option value="intersection">Intersection</option>
+                    </select> 
+                    tool to find exactly when \( f1(x) \) crosses above the line!
+                </div>
+                <button class="check-btn" onclick="checkAnswers(this)">Check Work</button>
+            </div>
+        </details>
+    </section>
+
+</div>
+
+<div id="dev-autofill" onclick="autofillAll()"></div>
+
+<script>
+    function checkAnswers(btnElement) {
+        let container = btnElement.parentElement;
+        let inputs = container.querySelectorAll('.inline-blank');
+        
+        inputs.forEach(input => {
+            let studentAnswerRaw = input.value.trim();
+            let correctAnswerRaw = input.getAttribute('data-answer');
+            
+            input.classList.remove('correct', 'incorrect');
+            
+            if (studentAnswerRaw === "") return;
+
+            let studentAnswer = studentAnswerRaw.toLowerCase().replace(/\s/g, '');
+            let correctAnswer = correctAnswerRaw.toLowerCase().replace(/\s/g, '');
+
+            let isNum = !isNaN(studentAnswer) && studentAnswer !== "" && !isNaN(correctAnswer) && !studentAnswerRaw.includes("A") && !studentAnswerRaw.includes("B") && !studentAnswerRaw.includes("C") && !studentAnswerRaw.includes("D");
+
+            if (isNum) {
+                if (Math.abs(parseFloat(studentAnswer) - parseFloat(correctAnswer)) < 0.015) {
+                    input.classList.add('correct');
+                } else {
+                    input.classList.add('incorrect');
+                }
+            } else {
+                if (studentAnswer === correctAnswer) {
+                    input.classList.add('correct');
+                } else {
+                    input.classList.add('incorrect');
+                }
+            }
+        });
+    }
+
+    function autofillAll() {
+        let allInputs = document.querySelectorAll('.inline-blank');
+        allInputs.forEach(input => {
+            input.value = input.getAttribute('data-answer');
+            input.classList.remove('incorrect');
+            input.classList.add('correct');
+        });
+    }
+</script>
+
+</body>
+</html>

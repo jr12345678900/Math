@@ -57,8 +57,8 @@
     // THE SECRET ACCESS CODE FOR TODAY
     const CORRECT_ACCESS_CODE = "TRIAL123";
 
-    // PASTE YOUR GOOGLE WEB APP URL HERE:
-    const GOOGLE_APP_URL = "PASTE_YOUR_URL_HERE";
+    // YOUR GOOGLE WEB APP URL:
+    const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbzRcpDmhGWxW5VOeC36UcRGCaz9_595UOkE9k5ND5aDqOa93sCa3EDtc7snu2O_K8A2/exec";
 
     function submitQuiz() {
         let fname = document.getElementById("fname").value.trim();
@@ -97,7 +97,7 @@
         formData.append("score", score);
 
         // Send to Google!
-        fetch(GOOGLE_APP_URL, {https://script.google.com/macros/s/AKfycbzRcpDmhGWxW5VOeC36UcRGCaz9_595UOkE9k5ND5aDqOa93sCa3EDtc7snu2O_K8A2/exec
+        fetch(GOOGLE_APP_URL, {
             method: 'POST',
             body: formData
         })
